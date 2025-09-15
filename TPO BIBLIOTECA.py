@@ -2,7 +2,7 @@
 
 import os
 
-# ---- Funciones ----
+# ---- Gestion de menues ----
 
 def limpiar_consola():
     """Limpia la consola; si no funciona, imprime líneas en blanco."""
@@ -15,14 +15,25 @@ def mostrar_menu():
     print("2. Registrar usuario")
     print("3. Mostrar usuarios")
     print("4. Listar préstamos")
+    print("5. Eliminar usuario")
+    print("6. Editar usuario")
     print("0. Salir")
 
+
+# ---- Gestión de libros ----
 def mostrar_libros(matriz_libros):
     print("\n               --- Lista de Libros --- \n ")
     print("ID | Título              | Autor             | Disponible    | Cantidad")
     for fila in matriz_libros:
         print(f"{fila[0]:<3}| {fila[1]:<20}| {fila[2]:<18}| {fila[3]}            |{fila[4]}")
 
+def buscar_libro_por_titulo(libros):
+    """Busca y muestra libros cuyo título contenga un texto."""
+    pass
+
+
+
+# ---- Gestión de usuarios ----
 def registrar_usuario(usuarios):
 
     print("\n--- Registro de Usuario ---\n")
@@ -55,6 +66,42 @@ def mostrar_usuarios(usuarios):
         for i, usuario in enumerate(usuarios):
             print(f"{i+1}. {usuario}")
 
+def eliminar_usuario(usuarios):
+    """Elimina un usuario """
+
+    nombre = str(input("Ingrese el nombre del usuario a eliminar: "))
+
+    if nombre not in usuarios:
+        print("El usuario no existe.")
+        return
+    
+    for nombres in usuarios:
+        if nombres == nombre:
+            usuarios.remove(nombres)
+            print("Usuario eliminado con éxito.")
+            return
+    
+
+def editar_usuario(usuarios):
+    """Permite modificar el nombre de un usuario."""
+    
+    nombre = str(input("Ingrese el nombre del usuario a editar: "))
+
+    if nombre not in usuarios:
+        print("El usuario no existe.")
+        return
+    
+    nuevo_nombre = input("Ingrese el nuevo nombre del usuario: ")
+    
+    for n in range(0,len(usuarios),1):
+        if usuarios[n] == nombre:
+            usuarios[n] = nuevo_nombre
+            print("Usuario editado con éxito.")
+            print(nombre,"cambio a:", nuevo_nombre)
+            return
+
+
+
 
 # ---- Gestión de préstamos ----
 
@@ -66,7 +113,7 @@ def listar_prestamos(matriz_prestamos):
 
 def prestar_libro(libros, usuarios, prestamos):
     """Registra un préstamo si hay stock y el usuario existe."""
-    
+
     pass
 
 def devolver_libro(libros, prestamos):
@@ -74,27 +121,12 @@ def devolver_libro(libros, prestamos):
     pass
 
 
-# ---- Gestión de usuarios ----
-
-def eliminar_usuario(usuarios, prestamos):
-    """Elimina un usuario si no tiene préstamos activos."""
-    pass
-
-def editar_usuario(usuarios):
-    """Permite modificar el nombre de un usuario."""
-    pass
-
 
 # ---- Reportes y menús auxiliares ----
 def mostrar_menu_prestamos():
     """Muestra las opciones relacionadas con préstamos."""
     pass
 
-# ---- Gestión de libros ----
-
-def buscar_libro_por_titulo(libros):
-    """Busca y muestra libros cuyo título contenga un texto."""
-    pass
 
 #Programa Principal
 
@@ -128,6 +160,10 @@ while opcion != 0:
         mostrar_usuarios(usuarios)
     elif opcion == 4:
         listar_prestamos(prestamos)
+    elif opcion == 5:
+        eliminar_usuario(usuarios)
+    elif opcion == 6:
+        editar_usuario(usuarios)
     elif opcion == 0:
         print("Saliendo del sistema...")
     else:
