@@ -6,16 +6,15 @@ import os
 
 def limpiar_consola():
     """Limpia la consola; si no funciona, imprime líneas en blanco."""
-    
     os.system('cls' if os.name == 'nt' else 'clear')
-
-    print("\n" * 50)
+    #print("\n" * 50)
 
 def mostrar_menu():
     print("\n--- Biblioteca ---")
     print("1. Mostrar libros")
     print("2. Registrar usuario")
     print("3. Mostrar usuarios")
+    print("4. Listar préstamos")
     print("0. Salir")
 
 def mostrar_libros(matriz_libros):
@@ -56,18 +55,18 @@ def mostrar_usuarios(usuarios):
         for i, usuario in enumerate(usuarios):
             print(f"{i+1}. {usuario}")
 
-# ---- Gestión de libros ----
-def buscar_libro_por_titulo(libros):
-    """Busca y muestra libros cuyo título contenga un texto."""
-    pass
 
 # ---- Gestión de préstamos ----
-def listar_prestamos(prestamos):
-    """Muestra todos los préstamos activos."""
-    pass
+
+def listar_prestamos(matriz_prestamos):
+    print("\n                       --- Lista de prestamos --- \n ")
+    print("|Usuario            | Libro               | Fecha de ingreso    | Fecha de devolución")
+    for fila in matriz_prestamos:
+        print(f"|{fila[0]:<3}               | {fila[1]:<20}| {fila[2]:<18}  | {fila[3]}")
 
 def prestar_libro(libros, usuarios, prestamos):
     """Registra un préstamo si hay stock y el usuario existe."""
+    
     pass
 
 def devolver_libro(libros, prestamos):
@@ -76,6 +75,7 @@ def devolver_libro(libros, prestamos):
 
 
 # ---- Gestión de usuarios ----
+
 def eliminar_usuario(usuarios, prestamos):
     """Elimina un usuario si no tiene préstamos activos."""
     pass
@@ -90,8 +90,14 @@ def mostrar_menu_prestamos():
     """Muestra las opciones relacionadas con préstamos."""
     pass
 
+# ---- Gestión de libros ----
+
+def buscar_libro_por_titulo(libros):
+    """Busca y muestra libros cuyo título contenga un texto."""
+    pass
 
 #Programa Principal
+
 libros = [
     #ID, Titulo, Autor, Disponibilidad, Cantidad en stock
     [1, "El Quijote", "Cervantes", "Sí", "20"],
@@ -99,8 +105,14 @@ libros = [
     [3, "La Odisea", "Homero", "Sí", "13"]
 ]
 
-usuarios = []       # lista de usuarios
-prestamos = []      # lista de préstamos (usuario, libro)
+usuarios = ["juan", "ricardo", "miguel"]       # lista de usuarios
+
+prestamos = [
+    # lista de préstamos (usuario, libro, fecha ingreso, fecha devolución)
+
+    ["juan", "El Quijote", "01/07/2025", "27/07/2025"]
+
+    ]      
 
 opcion = -1
 while opcion != 0:
@@ -114,6 +126,8 @@ while opcion != 0:
         registrar_usuario(usuarios)
     elif opcion == 3:
         mostrar_usuarios(usuarios)
+    elif opcion == 4:
+        listar_prestamos(prestamos)
     elif opcion == 0:
         print("Saliendo del sistema...")
     else:
