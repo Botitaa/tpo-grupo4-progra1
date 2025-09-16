@@ -92,7 +92,6 @@ def eliminar_libro(libros):
     
     eliminado = False
     
-    # Si el criterio es un número, buscar por ID
     if criterio.isdigit():
         criterio_num = int(criterio)
         for fila in libros:
@@ -101,7 +100,6 @@ def eliminar_libro(libros):
                 print(f"Libro con ID {criterio_num} eliminado con éxito.")
                 eliminado = True
     else:
-        # Buscar por título
         for fila in libros:
             if fila[1].lower() == criterio.lower():
                 libros.remove(fila)
@@ -279,3 +277,4 @@ while opcion != 0:
     else:
 
         print("Opción inválida, intente nuevamente.")
+
