@@ -152,14 +152,25 @@ def editar_usuario(usuarios):
         print("El usuario no existe.")
         return
     
-    nuevo_nombre = input("Ingrese el nuevo nombre del usuario: ")
-    
-    for n in range(0,len(usuarios),1):
-        if usuarios[n] == nombre:
-            usuarios[n] = nuevo_nombre
-            print("Usuario editado con éxito.")
-            print(nombre,"cambio a:", nuevo_nombre)
-            return
+    confirmado = False
+    while not confirmado:
+        nuevo_nombre = input("Ingrese el nuevo nombre del usuario: ")
+        
+        if nuevo_nombre in usuarios:
+            print("El usuario ya existe. Intente con otro nombre.")
+        elif not nuevo_nombre.strip():
+            print("El nombre no puede estar vacío. Intente nuevamente.")
+        elif len(nuevo_nombre) < 3 or len(nuevo_nombre) > 25:
+            print("El nombre debe tener al menos 3 caracteres y menos de 25 caracteres. Intente nuevamente.")
+        elif not nuevo_nombre.replace(" ", "").isalpha():
+            print("El nombre solo debe contener letras y espacios. Intente nuevamente.")
+        else:            
+            for n in range(len(usuarios)):
+                if usuarios[n] == nombre:
+                    usuarios[n] = nuevo_nombre
+                    print("Usuario editado con éxito.")
+                    print(nombre,"cambio a:", nuevo_nombre)
+                    confirmado = True
 
 
 # ---- Gestión de préstamos ----
@@ -335,4 +346,5 @@ prestamos = [
 ]      
 
 while True: 
+
     menu_principal()
