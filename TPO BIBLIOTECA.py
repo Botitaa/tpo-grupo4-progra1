@@ -215,8 +215,6 @@ def devolver_libro(libros, prestamos):
 
 def menu_principal():
 
-    limpiar_consola()
-
     print("\n--- Biblioteca ---")
     print("1. Gestión de Libros")
     print("2. Gestión de Usuarios")
@@ -224,6 +222,8 @@ def menu_principal():
     print("0. Salir")
 
     opcion = input("Seleccione una opción: ")
+    limpiar_consola()
+
 
     if opcion == '1':
         menu_libros()
@@ -240,7 +240,6 @@ def menu_principal():
 
 def menu_libros():
 
-    limpiar_consola()
 
     print("\n--- Gestión de Libros ---")
     print("1. Mostrar libros")
@@ -250,6 +249,8 @@ def menu_libros():
     print("0. Volver al menú principal")
 
     opcion = input("Seleccione una opción: ")
+    
+    limpiar_consola()
     
     if opcion == '1':
         mostrar_libros(libros)
@@ -266,7 +267,6 @@ def menu_libros():
 
 def menu_usuarios():
 
-    limpiar_consola()
     
     print("\n--- Gestión de Usuarios ---")
     print("1. Registrar usuario")
@@ -276,6 +276,8 @@ def menu_usuarios():
     print("0. Volver al menú principal")
 
     opcion = input("Seleccione una opción: ")
+    
+    limpiar_consola()
 
     if opcion == '1':
         registrar_usuario(usuarios)
@@ -292,14 +294,16 @@ def menu_usuarios():
 
 def menu_prestamos():
 
-    limpiar_consola()
     
     print("\n--- Gestión de Préstamos ---")
     print("1. Listar préstamos")
     print("2. Prestar libro")
     print("3. Devolver libro")
     print("0. Volver al menú principal")
+    
     opcion = input("Seleccione una opción: ")
+
+    limpiar_consola()
 
     if opcion == '1':
         listar_prestamos(prestamos)
@@ -330,4 +334,5 @@ prestamos = [
     ["juan", "El Quijote", "01/07/2025", "27/07/2025"]
 ]      
 
-menu_principal()
+while True: 
+    menu_principal()
