@@ -19,6 +19,9 @@ def mostrar_menu():
     print("6. Editar usuario")
     print("7. Prestar libro")
     print("8. Devolver libro")
+    print("9. Buscar libro")
+    print("10. Agregar libro")
+    print("11. Eliminar libro")
     print("0. Salir")
 
 
@@ -31,20 +34,82 @@ def mostrar_libros(matriz_libros):
 
 def buscar_libro_por_titulo(libros):
     """Busca y muestra libros cuyo título contenga un texto."""
-    pass
+    titulo = input("Ingrese el título del libro a buscar: ").lower()  # ingreso por teclado en minúsculas
+    encontrado = False
+    
+    for fila in libros:
+        if fila[1].lower() == titulo:  # comparacion sin importar mayúsculas
+            pos = libros.index(fila)  # posicion usando index 
+            print(f"\nLibro encontrado!")
+            print('-'*100)
+            print(f"ID: {fila[0]:<3}| Titulo: {fila[1]:<20}| Autor: {fila[2]:<18}| Disponibilidad: {fila[3]:<3}| Cantidad: {fila[4]:<5}")
+            print('-'*100)
+            encontrado = True
+    if encontrado == False:
+        print("\nNo se encontró el libro.")
 
 def agregar_libro(libros):
     """Agrega un nuevo libro a la matriz de libros."""
-    pass
+    print('\n--- Agregar Libro ---\n')
+    if len(libros)> 0:
+        nuevo_id = libros[-1][0] + 1
+    else:
+        nuevo_id = 1
+        
+    titulo = input('Ingrese el titulo del libro por favor: ').strip()
+    autor = input('Ingrese el autor por favor: ').strip()
+    
+    duplicado = False
+    for fila in libros:
+        if fila[1].lower() == titulo.lower():
+            duplicado = True
+    if duplicado == True:
+        print('Ese libro ya existe en la biblioteca.')
+        return
+    
+    cantidad = -1
+    while cantidad < 0:
+        cantidad_str = input('Ingrese la cantidad en stock: ')
+        if cantidad_str.isdigit():
+            cantidad = int(cantidad_str)
+            if cantidad<0:
+                print('La cantidad no puede ser negativa.')
+        else:
+            print('Ingrese un numero entero valido.')
+    
+    if cantidad>0:
+        disponibilidad = True
+    else:
+        disponibilidad = False
+        
+    libros.append([nuevo_id,titulo,autor,disponibilidad,cantidad])
+    print(f'Libro "{titulo}" agregado con exito.')
 
 def eliminar_libro(libros):
-    """Elimina un libro de la matriz de libros."""
-    pass
-
-def editar_libro(libros):
-    """Permite modificar los datos de un libro."""
-    pass
-
+    """Elimina un libro de la matriz de libros por ID o título."""
+    print("\n--- Eliminar Libro ---\n")
+    criterio = input("Ingrese el ID o el titulo del libro a eliminar: ").strip()
+    
+    eliminado = False
+    
+    # Si el criterio es un número, buscar por ID
+    if criterio.isdigit():
+        criterio_num = int(criterio)
+        for fila in libros:
+            if fila[0] == criterio_num:
+                libros.remove(fila)
+                print(f"Libro con ID {criterio_num} eliminado con éxito.")
+                eliminado = True
+    else:
+        # Buscar por título
+        for fila in libros:
+            if fila[1].lower() == criterio.lower():
+                libros.remove(fila)
+                print(f"Libro '{criterio}' eliminado con éxito.")
+                eliminado = True
+    
+    if eliminado == False:
+        print("No se encontró el libro.")
 
 
 # ---- Gestión de usuarios ----
@@ -164,13 +229,6 @@ def devolver_libro(libros, prestamos):
     print("No se encontró un préstamo para este usuario y libro.")
 
 
-
-# ---- Reportes y menús auxiliares ----
-def mostrar_menu_prestamos():
-    """Muestra las opciones relacionadas con préstamos."""
-    pass
-
-
 #Programa Principal
 
 libros = [
@@ -210,7 +268,14 @@ while opcion != 0:
         prestar_libro(libros, usuarios, prestamos)
     elif opcion == 8:
         devolver_libro(libros, prestamos)
+    elif opcion == 9:
+        buscar_libro_por_titulo(libros)
+    elif opcion == 10:
+        agregar_libro(libros)
+    elif opcion == 11:
+        eliminar_libro(libros)
     elif opcion == 0:
         print("Saliendo del sistema...")
     else:
+
         print("Opción inválida, intente nuevamente.")
