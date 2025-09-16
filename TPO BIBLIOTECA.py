@@ -2,27 +2,12 @@
 
 import os
 
-# ---- Gestion de menues ----
+# ---- Utilidades ----
 
 def limpiar_consola():
     """Limpia la consola; si no funciona, imprime líneas en blanco."""
     print("\n" * 50) # Alternativa simple
     os.system('cls' if os.name == 'nt' else 'clear')
-
-def mostrar_menu():
-    print("\n--- Biblioteca ---")
-    print("1. Mostrar libros")
-    print("2. Registrar usuario")
-    print("3. Mostrar usuarios")
-    print("4. Listar préstamos")
-    print("5. Eliminar usuario")
-    print("6. Editar usuario")
-    print("7. Prestar libro")
-    print("8. Devolver libro")
-    print("9. Buscar libro")
-    print("10. Agregar libro")
-    print("11. Eliminar libro")
-    print("0. Salir")
 
 
 # ---- Gestión de libros ----
@@ -226,6 +211,107 @@ def devolver_libro(libros, prestamos):
 
     print("No se encontró un préstamo para este usuario y libro.")
 
+# ---- Gestión de menues ----
+
+def menu_principal():
+
+    limpiar_consola()
+
+    print("\n--- Biblioteca ---")
+    print("1. Gestión de Libros")
+    print("2. Gestión de Usuarios")
+    print("3. Gestión de Préstamos")
+    print("0. Salir")
+
+    opcion = input("Seleccione una opción: ")
+
+    if opcion == '1':
+        menu_libros()
+    elif opcion == '2':
+        menu_usuarios()
+    elif opcion == '3':
+        menu_prestamos()
+    elif opcion == '0':
+        print("Saliendo del sistema...")
+        quit()
+    else:
+        print("Opción inválida, intente nuevamente.")
+
+
+def menu_libros():
+
+    limpiar_consola()
+
+    print("\n--- Gestión de Libros ---")
+    print("1. Mostrar libros")
+    print("2. Buscar libro por título")
+    print("3. Agregar libro")
+    print("4. Eliminar libro")
+    print("0. Volver al menú principal")
+
+    opcion = input("Seleccione una opción: ")
+    
+    if opcion == '1':
+        mostrar_libros(libros)
+    elif opcion == '2':
+        buscar_libro_por_titulo(libros)
+    elif opcion == '3':
+        agregar_libro(libros)
+    elif opcion == '4':
+        eliminar_libro(libros)
+    elif opcion == '0':
+        menu_principal()
+    else:
+        print("Opción inválida, intente nuevamente.")
+
+def menu_usuarios():
+
+    limpiar_consola()
+    
+    print("\n--- Gestión de Usuarios ---")
+    print("1. Registrar usuario")
+    print("2. Mostrar usuarios")
+    print("3. Editar usuario")
+    print("4. Eliminar usuario")
+    print("0. Volver al menú principal")
+
+    opcion = input("Seleccione una opción: ")
+
+    if opcion == '1':
+        registrar_usuario(usuarios)
+    elif opcion == '2':
+        mostrar_usuarios(usuarios)
+    elif opcion == '3':
+        editar_usuario(usuarios)
+    elif opcion == '4':
+        eliminar_usuario(usuarios)
+    elif opcion == '0':
+        menu_principal()    
+    else:
+        print("Opción inválida, intente nuevamente.")
+
+def menu_prestamos():
+
+    limpiar_consola()
+    
+    print("\n--- Gestión de Préstamos ---")
+    print("1. Listar préstamos")
+    print("2. Prestar libro")
+    print("3. Devolver libro")
+    print("0. Volver al menú principal")
+    opcion = input("Seleccione una opción: ")
+
+    if opcion == '1':
+        listar_prestamos(prestamos)
+    elif opcion == '2':
+        prestar_libro(libros, usuarios, prestamos)
+    elif opcion == '3':
+        devolver_libro(libros, prestamos)
+    elif opcion == '0':
+        menu_principal()
+    else:
+        print("Opción inválida, intente nuevamente.")
+
 
 #Programa Principal
 
@@ -244,37 +330,4 @@ prestamos = [
     ["juan", "El Quijote", "01/07/2025", "27/07/2025"]
 ]      
 
-opcion = -1
-while opcion != 0:
-    mostrar_menu()
-    opcion = int(input("Seleccione una opción: "))
-    limpiar_consola()
-
-    if opcion == 1:
-        mostrar_libros(libros)
-    elif opcion == 2:
-        registrar_usuario(usuarios)
-    elif opcion == 3:
-        mostrar_usuarios(usuarios)
-    elif opcion == 4:
-        listar_prestamos(prestamos)
-    elif opcion == 5:
-        eliminar_usuario(usuarios)
-    elif opcion == 6:
-        editar_usuario(usuarios)
-    elif opcion == 7:
-        prestar_libro(libros, usuarios, prestamos)
-    elif opcion == 8:
-        devolver_libro(libros, prestamos)
-    elif opcion == 9:
-        buscar_libro_por_titulo(libros)
-    elif opcion == 10:
-        agregar_libro(libros)
-    elif opcion == 11:
-        eliminar_libro(libros)
-    elif opcion == 0:
-        print("Saliendo del sistema...")
-    else:
-
-        print("Opción inválida, intente nuevamente.")
-
+menu_principal()
