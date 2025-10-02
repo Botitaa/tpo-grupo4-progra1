@@ -1,6 +1,7 @@
 #SISTEMA GESTION DE BIBLIOTECAS GRUPO 4 VIERNES TARDE
 
 import os
+from datetime import date, timedelta
 
 # ---- Utilidades ----
 
@@ -8,7 +9,6 @@ def limpiar_consola():
     """Limpia la consola; si no funciona, imprime líneas en blanco."""
     print("\n" * 50) # Alternativa simple
     os.system('cls' if os.name == 'nt' else 'clear')
-
 
 # ---- Gestión de libros ----
 def mostrar_libros(matriz_libros):
@@ -292,10 +292,13 @@ def editar_usuario(usuarios):
 # ---- Gestión de préstamos ----
 
 def listar_prestamos(matriz_prestamos):
-    print("\n                       --- Lista de prestamos --- \n ")
-    print("|Usuario            | Libro               | Fecha de ingreso    | Fecha limite de devolución")
+    print("\n--- Lista de Préstamos ---\n")
+    print(f"{'Usuario':<15} | {'Libro':<25} | {'Fecha ingreso':<15} | {'Fecha límite':<15}")
+    print("-" * 80)
+
     for fila in matriz_prestamos:
-        print(f"|{fila[0]:<3}               | {fila[1]:<20}| {fila[2]:<18}  | {fila[3]}")
+        print(f"{fila[0]:<15} | {fila[1]:<25} | {fila[2]:<15} | {fila[3]:<15}")
+
 
 def prestar_libro(libros, usuarios, prestamos):
     """Registra un préstamo si hay stock y el usuario existe."""
@@ -311,13 +314,12 @@ def prestar_libro(libros, usuarios, prestamos):
 
     usuario_prestar = input("Ingrese el nombre del usuario: ")
 
-    if usuario_prestar not in usuarios:
+    while usuario_prestar not in usuarios[0]:
         print("El usuario no está registrado.")
-        return
+        usuario_prestar = input("Ingrese un usuario válido: ")
     
-    fecha_ingreso = input("Ingrese la fecha de ingreso (dd/mm/aaaa): ")
-
-    fecha_limite = input("Ingrese la fecha límite de devolución (dd/mm/aaaa): ")
+    fecha_ingreso = date.today().strftime("%d/%m/%Y")
+    fecha_limite = determinar_fecha_vencimiento(date.today())
 
     prestamos.append([usuario_prestar, libro_prestar, fecha_ingreso, fecha_limite])
     libros[[libro[1] for libro in libros].index(libro_prestar)][4] -= 1
@@ -337,6 +339,28 @@ def devolver_libro(libros, prestamos):
             return
 
     print("No se encontró un préstamo para este usuario y libro.")
+
+def determinar_fecha_vencimiento(fecha_hoy):
+    print("1. 7 días")
+    print("2. 15 días")
+    print("3. 30 días")
+
+    opcion = input("Seleccione el plazo de devolución: ")
+
+    dias_a_sumar = 0
+    if opcion == '1':
+        dias_a_sumar = 7
+    elif opcion == '2':
+        dias_a_sumar = 15
+    elif opcion == '3':
+        dias_a_sumar = 30
+    else:
+        print("Opción inválida. Se asignarán 7 días por defecto.")
+        dias_a_sumar = 7
+
+    # ✅ Usar timedelta para sumar días correctamente
+    fecha_vencimiento = fecha_hoy + timedelta(days=dias_a_sumar)
+    return fecha_vencimiento.strftime("%d/%m/%Y")
 
 # ---- Gestión de menues ----
 
@@ -457,7 +481,7 @@ usuarios = [
     # lista de usuarios
     # nombre, DNI, tel, mail, direcciónx
     
-    ['juana', 'maria', 'pedro'],
+    ['juan', 'maria', 'pedro'],
     [46962189, 12345678, 98765432],
     [1126030810, 1189077253, 1178540819],
     ['juanagarcia@hotmail.com', 'mariacrisler@gmail.com', 'pedrotrota@gmail.com'],
