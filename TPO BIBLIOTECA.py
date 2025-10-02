@@ -45,6 +45,7 @@ def agregar_libro(libros):
     autor = input('Ingrese el autor por favor: ').strip()
     
     duplicado = False
+
     for fila in libros:
         if fila[1].lower() == titulo.lower():
             duplicado = True
@@ -53,6 +54,7 @@ def agregar_libro(libros):
         return
     
     cantidad = -1
+
     while cantidad < 0:
         cantidad_str = input('Ingrese la cantidad en stock: ')
         if cantidad_str.isdigit():
@@ -98,35 +100,149 @@ def eliminar_libro(libros):
 # ---- Gestión de usuarios ----
 def registrar_usuario(usuarios):
 
+    # Asegurar estructura mínima de 5 listas (por si acaso)
+    while len(usuarios) < 5:
+        usuarios.append([])
+
     print("\n--- Registro de Usuario ---\n")
 
-    nombre = input("Ingrese nombre del usuario: ")
-
-    #verificaciones
-
-    while nombre in usuarios:
-        print("El usuario ya existe. Intente con otro nombre.")
-        nombre = input("Ingrese nombre del usuario: ")
-    while not nombre.strip():
-        print("El nombre no puede estar vacío. Intente nuevamente.")
-        nombre = input("Ingrese nombre del usuario: ")
-    while len(nombre) < 3 or len(nombre) > 25:
-        print("El nombre debe tener al menos 3 caracteres y menos de 25 caracteres. Intente nuevamente.")
-        nombre = input("Ingrese nombre del usuario: ")
-    while not nombre.replace(" ", "").isalpha():
-        print("El nombre solo debe contener letras y espacios. Intente nuevamente.")
+    # ------- Nombre -------
+    validado = False
+    while not validado:
         nombre = input("Ingrese nombre del usuario: ")
 
-    usuarios.append(nombre)
-    print("Usuario registrado con éxito.")
+        if not nombre.strip():
+            print("El nombre no puede estar vacío. Intente nuevamente.")
+            continue
+        if not (3 <= len(nombre) <= 25):
+            print("El nombre debe tener entre 3 y 25 caracteres.")
+            continue
+        if not nombre.replace(" ", "").isalpha():
+            print("El nombre solo debe contener letras y espacios.")
+            continue
+        if nombre in usuarios[0]:
+            print("El usuario ya existe. Intente con otro nombre.")
+            continue
+
+        validado = True
+
+    usuarios[0].append(nombre)
+
+    # ------- DNI -------
+    validado = False
+    dnis_existentes = set(map(str, usuarios[1]))
+    while not validado:
+        documento = input("Ingrese el DNI del usuario: ")
+
+        if not documento.strip():
+            print("El documento no puede estar vacío.")
+            continue
+        if not documento.isdigit():
+            print("El documento solo debe contener números.")
+            continue
+        if not (7 <= len(documento) <= 9):
+            print("El documento debe tener entre 7 y 9 dígitos.")
+            continue
+        if documento in dnis_existentes:
+            print("El documento ya está registrado.")
+            continue
+
+        validado = True
+
+    usuarios[1].append(int(documento))
+
+    # ------- Teléfono (10 dígitos y empieza con 11) -------
+    validado = False
+    tels_existentes = set(map(str, usuarios[2]))
+    while not validado:
+        telefono = input("Ingrese el teléfono (10 dígitos, debe iniciar con 11): ")
+
+        if not telefono.strip():
+            print("El teléfono no puede estar vacío.")
+            continue
+        if not telefono.isdigit():
+            print("El teléfono solo debe contener números.")
+            continue
+        if len(telefono) != 10:
+            print("El teléfono debe tener exactamente 10 dígitos.")
+            continue
+        if not telefono.startswith("11"):
+            print("El teléfono debe iniciar con '11'.")
+            continue
+        if telefono in tels_existentes:
+            print("Ese teléfono ya está registrado.")
+            continue
+
+        validado = True
+
+    usuarios[2].append(int(telefono))
+
+    # ------- Email (debe tener @ y un . después) -------
+    validado = False
+    emails_existentes = set(e.lower() for e in usuarios[3])
+    while not validado:
+        email = input("Ingrese el email: ").strip().lower()
+
+        if not email:
+            print("El email no puede estar vacío.")
+            continue
+        if "@" not in email:
+            print("El email debe contener '@'.")
+            continue
+
+        local, sep, dominio = email.partition("@")
+        if not local or "." not in dominio or dominio.startswith(".") or dominio.endswith("."):
+            print("Formato de email inválido. Ej: usuario@dominio.com")
+            continue
+        if email in emails_existentes:
+            print("Ese email ya está registrado.")
+            continue
+
+        validado = True
+
+    usuarios[3].append(email)
+
+    # ------- Dirección (debe tener letras y números) -------
+    validado = False
+    while not validado:
+        direccion = input("Ingrese la dirección: ").strip()
+
+        if not direccion:
+            print("La dirección no puede estar vacía.")
+            continue
+        tiene_letras = any(c.isalpha() for c in direccion)
+        tiene_numeros = any(c.isdigit() for c in direccion)
+        if not (tiene_letras and tiene_numeros):
+            print("La dirección debe contener letras y números (ej: 'Calle Falsa 123').")
+            continue
+
+        validado = True
+
+    usuarios[4].append(direccion)
+
+    print(f"\n✅ {nombre} (DNI {documento}) registrado con éxito.\n")
+    return usuarios
 
 def mostrar_usuarios(usuarios):
     print("\n--- Lista de Usuarios ---\n")
-    if len(usuarios) == 0:
-        print("No hay usuarios registrados.")
-    else:
-        for i, usuario in enumerate(usuarios):
-            print(f"{i+1}. {usuario}")
+
+    # Encabezados
+    encabezados = ["Nombre", "DNI", "Teléfono", "Email", "Dirección"]
+    print(f"{encabezados[0]:<10} {encabezados[1]:<10} {encabezados[2]:<12} {encabezados[3]:<30} {encabezados[4]:<30}")
+    print("-" * 95)
+
+    # Cantidad de usuarios (cantidad de filas)
+    cant_usuarios = len(usuarios[0])
+
+    # Recorrer por índice y armar cada fila
+    for i in range(cant_usuarios):
+        nombre = str(usuarios[0][i])
+        dni = str(usuarios[1][i])
+        telefono = str(usuarios[2][i])
+        email = str(usuarios[3][i])
+        direccion = str(usuarios[4][i])
+
+        print(f"{nombre:<10} {dni:<10} {telefono:<12} {email:<30} {direccion:<30}")
 
 def eliminar_usuario(usuarios):
     """Elimina un usuario """
@@ -142,7 +258,7 @@ def eliminar_usuario(usuarios):
             usuarios.remove(nombres)
             print("Usuario eliminado con éxito.")
             return
-    
+
 def editar_usuario(usuarios):
     """Permite modificar el nombre de un usuario."""
     
@@ -337,7 +453,18 @@ libros = [
     [3, "La Odisea", "Homero", False, 0]
 ]
 
-usuarios = ["juan", "ricardo", "miguel"]       # lista de usuarios
+usuarios = [       
+    # lista de usuarios
+    # nombre, DNI, tel, mail, direcciónx
+    
+    ['juana', 'maria', 'pedro'],
+    [46962189, 12345678, 98765432],
+    [1126030810, 1189077253, 1178540819],
+    ['juanagarcia@hotmail.com', 'mariacrisler@gmail.com', 'pedrotrota@gmail.com'],
+    ['Calle Falsa 123', 'Avenida Siempre Viva 742', 'Boulevard de los Sueños Rotos 456']
+
+
+]
 
 prestamos = [
     # lista de préstamos (usuario, libro, fecha ingreso, fecha maxima de devolución)
