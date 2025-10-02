@@ -226,23 +226,27 @@ def registrar_usuario(usuarios):
 def mostrar_usuarios(usuarios):
     print("\n--- Lista de Usuarios ---\n")
 
-    # Encabezados
-    encabezados = ["Nombre", "DNI", "Teléfono", "Email", "Dirección"]
-    print(f"{encabezados[0]:<10} {encabezados[1]:<10} {encabezados[2]:<12} {encabezados[3]:<30} {encabezados[4]:<30}")
-    print("-" * 95)
+    # Encabezados con formato tipo tabla
+    encabezados = ["Nombre", "DNI", "Teléfono", "Email", "Dirección", "Estado"]
+    print(f"| {encabezados[0]:<12} | {encabezados[1]:<10} | {encabezados[2]:<12} | {encabezados[3]:<30} | {encabezados[4]:<40} | {encabezados[5]:<12} |")
+    print("-" * 136)
 
-    # Cantidad de usuarios (cantidad de filas)
+    # Cantidad de usuarios (filas)
     cant_usuarios = len(usuarios[0])
 
-    # Recorrer por índice y armar cada fila
+    # Recorrer cada usuario
     for i in range(cant_usuarios):
         nombre = str(usuarios[0][i])
         dni = str(usuarios[1][i])
         telefono = str(usuarios[2][i])
         email = str(usuarios[3][i])
         direccion = str(usuarios[4][i])
+        bloqueado = usuarios[5][i]
 
-        print(f"{nombre:<10} {dni:<10} {telefono:<12} {email:<30} {direccion:<30}")
+        estado = "(Bloqueado)" if bloqueado else "Sin faltas"
+
+        print(f"| {nombre:<12} | {dni:<10} | {telefono:<12} | {email:<30} | {direccion:<40} | {estado:<12} |")
+
 
 def eliminar_usuario(usuarios):
     """Elimina un usuario """
@@ -339,6 +343,25 @@ def devolver_libro(libros, prestamos):
             return
 
     print("No se encontró un préstamo para este usuario y libro.")
+
+
+def prestamos_vencidos(prestamos):
+    """Muestra los préstamos que han vencido."""
+    hoy = date.today()
+    print("\n--- Préstamos Vencidos ---\n")
+    print(f"{'Usuario':<15} | {'Libro':<25} | {'Fecha ingreso':<15} | {'Fecha límite':<15}")
+    print("-" * 80)
+
+    for fila in prestamos:
+        partes = fila[3].split("/")   # ["27","07","2025"]
+        dia = int(partes[0])
+        mes = int(partes[1])
+        anio = int(partes[2])
+        fecha_limite = date(anio, mes, dia)
+
+        if fecha_limite < hoy:
+            print(f"{fila[0]:<15} | {fila[1]:<25} | {fila[2]:<15} | {fila[3]:<15}")
+
 
 def determinar_fecha_vencimiento(fecha_hoy):
     print("1. 7 días")
@@ -450,6 +473,7 @@ def menu_prestamos():
     print("1. Listar préstamos")
     print("2. Prestar libro")
     print("3. Devolver libro")
+    print("4. Préstamos vencidos")
     print("0. Volver al menú principal")
     
     opcion = input("Seleccione una opción: ")
@@ -462,6 +486,8 @@ def menu_prestamos():
         prestar_libro(libros, usuarios, prestamos)
     elif opcion == '3':
         devolver_libro(libros, prestamos)
+    elif opcion == '4':
+        prestamos_vencidos(prestamos)
     elif opcion == '0':
         menu_principal()
     else:
@@ -479,14 +505,14 @@ libros = [
 
 usuarios = [       
     # lista de usuarios
-    # nombre, DNI, tel, mail, direcciónx
+    # nombre, DNI, tel, mail, direcciónx, bloqueado
     
     ['juan', 'maria', 'pedro'],
     [46962189, 12345678, 98765432],
     [1126030810, 1189077253, 1178540819],
     ['juanagarcia@hotmail.com', 'mariacrisler@gmail.com', 'pedrotrota@gmail.com'],
-    ['Calle Falsa 123', 'Avenida Siempre Viva 742', 'Boulevard de los Sueños Rotos 456']
-
+    ['Calle Falsa 123', 'Avenida Siempre Viva 742', 'Boulevard de los Sueños Rotos 456'],
+    [True, False, False]  # bloqueado
 
 ]
 
@@ -494,7 +520,13 @@ prestamos = [
     # lista de préstamos (usuario, libro, fecha ingreso, fecha maxima de devolución)
 
     ["juan", "El Quijote", "01/07/2025", "27/07/2025"]
-]      
+]
+
+prestamos_morosos = [
+    # lista de préstamos morosos (usuario, libro, fecha ingreso, fecha maxima de devolución)
+
+    ["juan", "El Quijote", "01/07/2025", "27/07/2025"]
+]
 
 while True: 
 
