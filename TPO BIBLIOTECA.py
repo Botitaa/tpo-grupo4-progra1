@@ -98,6 +98,7 @@ def eliminar_libro(libros):
 
 
 # ---- Gestión de usuarios ----
+
 def registrar_usuario(usuarios):
 
     # Asegurar estructura mínima de 5 listas (por si acaso)
@@ -114,17 +115,17 @@ def registrar_usuario(usuarios):
         if not nombre.strip():
             print("El nombre no puede estar vacío. Intente nuevamente.")
             continue
-        if not (3 <= len(nombre) <= 25):
+        elif not (3 <= len(nombre) <= 25):
             print("El nombre debe tener entre 3 y 25 caracteres.")
             continue
-        if not nombre.replace(" ", "").isalpha():
+        elif not nombre.replace(" ", "").isalpha():
             print("El nombre solo debe contener letras y espacios.")
             continue
-        if nombre in usuarios[0]:
+        elif nombre in usuarios[0]:
             print("El usuario ya existe. Intente con otro nombre.")
             continue
-
-        validado = True
+        else:
+            validado = True
 
     usuarios[0].append(nombre)
 
@@ -137,13 +138,13 @@ def registrar_usuario(usuarios):
         if not documento.strip():
             print("El documento no puede estar vacío.")
             continue
-        if not documento.isdigit():
+        elif not documento.isdigit():
             print("El documento solo debe contener números.")
             continue
-        if not (7 <= len(documento) <= 9):
+        elif not (7 <= len(documento) <= 9):
             print("El documento debe tener entre 7 y 9 dígitos.")
             continue
-        if documento in dnis_existentes:
+        elif documento in dnis_existentes:
             print("El documento ya está registrado.")
             continue
 
@@ -160,16 +161,16 @@ def registrar_usuario(usuarios):
         if not telefono.strip():
             print("El teléfono no puede estar vacío.")
             continue
-        if not telefono.isdigit():
+        elif not telefono.isdigit():
             print("El teléfono solo debe contener números.")
             continue
-        if len(telefono) != 10:
+        elif len(telefono) != 10:
             print("El teléfono debe tener exactamente 10 dígitos.")
             continue
-        if not telefono.startswith("11"):
+        elif not telefono.startswith("11"):
             print("El teléfono debe iniciar con '11'.")
             continue
-        if telefono in tels_existentes:
+        elif telefono in tels_existentes:
             print("Ese teléfono ya está registrado.")
             continue
 
@@ -186,7 +187,7 @@ def registrar_usuario(usuarios):
         if not email:
             print("El email no puede estar vacío.")
             continue
-        if "@" not in email:
+        elif "@" not in email:
             print("El email debe contener '@'.")
             continue
 
@@ -194,7 +195,7 @@ def registrar_usuario(usuarios):
         if not local or "." not in dominio or dominio.startswith(".") or dominio.endswith("."):
             print("Formato de email inválido. Ej: usuario@dominio.com")
             continue
-        if email in emails_existentes:
+        elif email in emails_existentes:
             print("Ese email ya está registrado.")
             continue
 
@@ -210,8 +211,10 @@ def registrar_usuario(usuarios):
         if not direccion:
             print("La dirección no puede estar vacía.")
             continue
+        
         tiene_letras = any(c.isalpha() for c in direccion)
         tiene_numeros = any(c.isdigit() for c in direccion)
+        
         if not (tiene_letras and tiene_numeros):
             print("La dirección debe contener letras y números (ej: 'Calle Falsa 123').")
             continue
@@ -253,44 +256,136 @@ def eliminar_usuario(usuarios):
 
     nombre = str(input("Ingrese el nombre del usuario a eliminar: "))
 
-    if nombre not in usuarios:
+    if nombre not in usuarios[0]:
         print("El usuario no existe.")
         return
+
+    intento = input("Ingrese la contraseña de administrador para confirmar: ")
+
+    if intento != contraseña:
+        print("Contraseña incorrecta. Operación cancelada.")
+        return
     
-    for nombres in usuarios:
-        if nombres == nombre:
-            usuarios.remove(nombres)
-            print("Usuario eliminado con éxito.")
-            return
+    if contraseña == intento:
+        indice = usuarios[0].index(nombre)
+        for u in usuarios:
+            u.pop(indice)
+    
+    print(f"Usuario '{nombre}' eliminado con éxito.")
+    
+
 
 def editar_usuario(usuarios):
     """Permite modificar el nombre de un usuario."""
     
     nombre = str(input("Ingrese el nombre del usuario a editar: "))
 
-    if nombre not in usuarios:
+    if nombre not in usuarios[0]:
         print("El usuario no existe.")
         return
     
+    indice = usuarios[0].index(nombre)
+    
+    intento = input("Ingrese la contraseña de administrador para confirmar: ")
+
+    if intento != contraseña:
+        print("Contraseña incorrecta. Operación cancelada.")
+        return
+    
+    
     confirmado = False
     while not confirmado:
-        nuevo_nombre = input("Ingrese el nuevo nombre del usuario: ")
+
+        print("1. Nombre")
+        print("2. Dni")
+        print("3. Telefono")
+        print("4. Email")
+        print("5. Direccion")
+        print("6. Estado")
+        print("0. volver")
+
+        opcion = int(input("Elija un campo para editar: "))
+
+        if opcion == 0:
+            confirmado = True
+            return
+        elif opcion == 1:
+            #editar nombre
+            nuevo_nombre = input("Ingrese el nuevo nombre del usuario: ")
         
-        if nuevo_nombre in usuarios:
-            print("El usuario ya existe. Intente con otro nombre.")
-        elif not nuevo_nombre.strip():
-            print("El nombre no puede estar vacío. Intente nuevamente.")
-        elif len(nuevo_nombre) < 3 or len(nuevo_nombre) > 25:
-            print("El nombre debe tener al menos 3 caracteres y menos de 25 caracteres. Intente nuevamente.")
-        elif not nuevo_nombre.replace(" ", "").isalpha():
-            print("El nombre solo debe contener letras y espacios. Intente nuevamente.")
-        else:            
-            for n in range(len(usuarios)):
-                if usuarios[n] == nombre:
-                    usuarios[n] = nuevo_nombre
-                    print("Usuario editado con éxito.")
-                    print(nombre,"cambio a:", nuevo_nombre)
-                    confirmado = True
+            if nuevo_nombre in usuarios[0]:
+                print("El usuario ya existe. Intente con otro nombre.")
+            elif not nuevo_nombre.strip():
+                print("El nombre no puede estar vacío. Intente nuevamente.")
+            elif len(nuevo_nombre) < 3 or len(nuevo_nombre) > 25:
+                print("El nombre debe tener al menos 3 caracteres y menos de 25 caracteres. Intente nuevamente.")
+            elif not nuevo_nombre.replace(" ", "").isalpha():
+                print("El nombre solo debe contener letras y espacios. Intente nuevamente.")
+            else:            
+                usuarios[0][indice] = nuevo_nombre
+                print("Usuario editado con éxito.")
+                print(nombre,"cambio a:", nuevo_nombre)
+                nombre = nuevo_nombre
+        elif opcion == 2:
+            #editar dni
+            nuevo_dni = input("Ingrese el nuevo DNI del usuario: ")
+
+            if not nuevo_dni.strip():
+                print("El documento no puede estar vacío.")
+            elif not nuevo_dni.isdigit():
+                print("El documento solo debe contener números.")
+            elif not (7 <= len(nuevo_dni) <= 9):
+                print("El documento debe tener entre 7 y 9 dígitos.")
+            elif int(nuevo_dni) in usuarios[1]:
+                print("El documento ya está registrado.")
+            else:
+                usuarios[1][indice] = int(nuevo_dni)
+                print("DNI editado con éxito.")
+        elif opcion == 3:
+            #editar telefono
+            nuevo_telefono = input("Ingrese el nuevo teléfono (10 dígitos, debe iniciar con 11): ")
+
+            if not nuevo_telefono.strip():
+                print("El teléfono no puede estar vacío.")
+            elif not nuevo_telefono.isdigit():
+                print("El teléfono solo debe contener números.")
+            elif len(nuevo_telefono) != 10:
+                print("El teléfono debe tener exactamente 10 dígitos.")
+            elif not nuevo_telefono.startswith("11"):
+                print("El teléfono debe iniciar con '11'.")
+            elif int(nuevo_telefono) in usuarios[2]:
+                print("Ese teléfono ya está registrado.")
+            else:
+                usuarios[2][indice] = int(nuevo_telefono)
+                print("Teléfono editado con éxito.")
+        elif opcion == 4:
+            #editar email
+            nuevo_email = input("Ingrese el nuevo email: ").strip().lower()
+
+            if not nuevo_email:
+                print("El email no puede estar vacío.")
+            elif "@" not in nuevo_email:
+                print("El email debe contener '@'.")
+            else:
+                usuarios[3][indice] = nuevo_email
+                print("Email editado con éxito.")
+        elif opcion == 5:
+            #direreccion
+            nueva_direccion = input("Ingrese la nueva dirección: ").strip()
+
+            if not nueva_direccion:
+                print("La dirección no puede estar vacía.")
+            else:
+                    usuarios[4][indice] = nueva_direccion
+                    print("Dirección editada con éxito.")
+        elif opcion == 6:
+            #estado
+            usuarios[5][indice] = not usuarios[5][indice]
+            estado = "bloqueado" if usuarios[5][indice] else "desbloqueado"
+            print(f"Usuario {estado} con éxito.")
+        else:
+            print("Elija una opcion correcta: ")
+
 
 
 # ---- Gestión de préstamos ----
@@ -493,7 +588,6 @@ def menu_prestamos():
     else:
         print("Opción inválida, intente nuevamente.")
 
-
 #Programa Principal
 
 libros = [
@@ -527,6 +621,8 @@ prestamos_morosos = [
 
     ["juan", "El Quijote", "01/07/2025", "27/07/2025"]
 ]
+
+contraseña = "admin1234"
 
 while True: 
 
