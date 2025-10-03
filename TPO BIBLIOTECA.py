@@ -262,11 +262,11 @@ def eliminar_usuario(usuarios):
 
     intento = input("Ingrese la contraseña de administrador para confirmar: ")
 
-    if intento != contraseña:
+    if intento != contrasenia:
         print("Contraseña incorrecta. Operación cancelada.")
         return
     
-    if contraseña == intento:
+    if contrasenia == intento:
         indice = usuarios[0].index(nombre)
         for u in usuarios:
             u.pop(indice)
@@ -288,7 +288,7 @@ def editar_usuario(usuarios):
     
     intento = input("Ingrese la contraseña de administrador para confirmar: ")
 
-    if intento != contraseña:
+    if intento != contrasenia:
         print("Contraseña incorrecta. Operación cancelada.")
         return
     
@@ -416,7 +416,16 @@ def prestar_libro(libros, usuarios, prestamos):
     while usuario_prestar not in usuarios[0]:
         print("El usuario no está registrado.")
         usuario_prestar = input("Ingrese un usuario válido: ")
-    
+
+    suma = 0
+
+    for i in prestamos:
+        if i[0] == usuario_prestar:
+            suma += 1
+        if suma >= 3:
+            print("supero el maximo de 3 prestamos")
+            return
+
     fecha_ingreso = date.today().strftime("%d/%m/%Y")
     fecha_limite = determinar_fecha_vencimiento(date.today())
 
@@ -476,9 +485,12 @@ def determinar_fecha_vencimiento(fecha_hoy):
         print("Opción inválida. Se asignarán 7 días por defecto.")
         dias_a_sumar = 7
 
-    # ✅ Usar timedelta para sumar días correctamente
     fecha_vencimiento = fecha_hoy + timedelta(days=dias_a_sumar)
     return fecha_vencimiento.strftime("%d/%m/%Y")
+
+def renovacion_prestamos():
+
+    pass
 
 # ---- Gestión de menues ----
 
@@ -569,6 +581,7 @@ def menu_prestamos():
     print("2. Prestar libro")
     print("3. Devolver libro")
     print("4. Préstamos vencidos")
+    print("5. Renovacion")
     print("0. Volver al menú principal")
     
     opcion = input("Seleccione una opción: ")
@@ -583,6 +596,8 @@ def menu_prestamos():
         devolver_libro(libros, prestamos)
     elif opcion == '4':
         prestamos_vencidos(prestamos)
+    elif opcion == "5":
+        renovacion_prestamos()
     elif opcion == '0':
         menu_principal()
     else:
@@ -613,6 +628,8 @@ usuarios = [
 prestamos = [
     # lista de préstamos (usuario, libro, fecha ingreso, fecha maxima de devolución)
 
+    ["juan", "El Quijote", "01/07/2025", "27/07/2025"],
+    ["juan", "El Quijote", "01/07/2025", "27/07/2025"],
     ["juan", "El Quijote", "01/07/2025", "27/07/2025"]
 ]
 
@@ -622,7 +639,7 @@ prestamos_morosos = [
     ["juan", "El Quijote", "01/07/2025", "27/07/2025"]
 ]
 
-contraseña = "admin1234"
+contrasenia = "admin1234"
 
 while True: 
 
