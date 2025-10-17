@@ -11,6 +11,15 @@ def limpiar_consola():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 # ---- Gestión de libros ----
+def matriz_transpuesta(matriz_libros):
+    transpuesta = []
+    for i in range(len(matriz_libros[0])):
+        fila_transpuesta = []
+        for j in range(len(matriz_libros)):
+            fila_transpuesta.append(matriz_libros[j][i])
+        transpuesta.append(fila_transpuesta)
+    return transpuesta
+
 def mostrar_libros(matriz_libros):
     print("\n               --- Lista de Libros --- \n ")
     print("ID | Título              | Autor             | Disponible    | Cantidad")
@@ -644,3 +653,4 @@ contrasenia = "admin1234"
 while True: 
 
     menu_principal()
+
