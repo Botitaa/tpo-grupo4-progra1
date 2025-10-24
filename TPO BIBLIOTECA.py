@@ -26,21 +26,35 @@ def mostrar_libros(matriz_libros):
     for fila in matriz_libros:
         print(f"{fila[0]:<3}| {fila[1]:<20}| {fila[2]:<18}| {fila[3]}            |{fila[4]}")
 
-def buscar_libro_por_titulo(libros):
-    """Busca y muestra libros cuyo título contenga un texto."""
-    titulo = input("Ingrese el título del libro a buscar: ").lower()  # ingreso por teclado en minúsculas
-    encontrado = False
+def buscar_libro_parcial(libros):
+    """Busca y muestra libros por parte del txto del titulo o del autor."""
+    print('\n----Busqueda de libros---')    
+    print('1. Busqueda por titulo')    
+    print('2. Busqueda por autor')    
+    opcion = input('\nSeleccione una opcion por favor:').strip()
     
+    if opcion == '1':
+        busqueda = input("Ingrese el título del libro a buscar: ").strip().lower()  # ingreso por teclado en minúsculas
+        columna = 1
+    if opcion == '2':
+        busqueda = input("Ingrese el autor del libro a buscar: ").strip().lower()  # ingreso por teclado en minúsculas
+        columna = 2
+    else:
+        print('Opcion invalida.')
+        return []
+       
+    encontrados = [] 
     for fila in libros:
-        if fila[1].lower() == titulo:  # comparacion sin importar mayúsculas
-            pos = libros.index(fila)  # posicion usando index 
-            print(f"\nLibro encontrado!")
-            print('-'*100)
-            print(f"ID: {fila[0]:<3}| Titulo: {fila[1]:<20}| Autor: {fila[2]:<18}| Disponibilidad: {fila[3]:<3}| Cantidad: {fila[4]:<5}")
-            print('-'*100)
-            encontrado = True
-    if encontrado == False:
-        print("\nNo se encontró el libro.")
+        if busqueda in fila[columna].lower():
+            encontrados.append(fila)
+            
+    if len(encontrados) == 0:
+        print('No se encontro ningun libro con ese texto')
+        return []
+    
+    print('\nLibros encotrados:')
+    mostrar_libros(encontrados)
+    return encontrados
 
 def agregar_libro(libros):
     """Agrega un nuevo libro a la matriz de libros."""
@@ -104,7 +118,6 @@ def eliminar_libro(libros):
     
     if eliminado == False:
         print("No se encontró el libro.")
-
 
 # ---- Gestión de usuarios ----
 
@@ -287,7 +300,7 @@ def eliminar_usuario(usuarios):
 def editar_usuario(usuarios):
     """Permite modificar el nombre de un usuario."""
     
-    nombre = str(input("Ingrese el nombre del usuario a editar: "))
+    nombre = str(input("Ingrese el nombre del usuario a editar: ")).lower
 
     if nombre not in usuarios[0]:
         print("El usuario no existe.")
@@ -379,7 +392,7 @@ def editar_usuario(usuarios):
                 usuarios[3][indice] = nuevo_email
                 print("Email editado con éxito.")
         elif opcion == 5:
-            #direreccion
+            #direccion
             nueva_direccion = input("Ingrese la nueva dirección: ").strip()
 
             if not nueva_direccion:
@@ -545,7 +558,7 @@ def menu_libros():
     if opcion == '1':
         mostrar_libros(libros)
     elif opcion == '2':
-        buscar_libro_por_titulo(libros)
+        buscar_libro_parcial(libros)
     elif opcion == '3':
         agregar_libro(libros)
     elif opcion == '4':
