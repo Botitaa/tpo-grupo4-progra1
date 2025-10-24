@@ -96,9 +96,10 @@ def agregar_libro(libros):
     print(f'Libro "{titulo}" agregado con exito.')
 
 def eliminar_libro(libros):
-    """Elimina un libro de la matriz de libros por ID o título."""
+    """Elimina un libro de la matriz de libros por ID."""
     print("\n--- Eliminar Libro ---\n")
-    criterio = input("Ingrese el ID o el titulo del libro a eliminar: ").strip()
+    mostrar_libros(libros)
+    criterio = input("\nIngrese el ID del libro a eliminar: ").strip()
     
     eliminado = False
     
@@ -106,15 +107,11 @@ def eliminar_libro(libros):
         criterio_num = int(criterio)
         for fila in libros:
             if fila[0] == criterio_num:
+                titulo_eliminado = fila[1]
                 libros.remove(fila)
-                print(f"Libro con ID {criterio_num} eliminado con éxito.")
+                print(f"Libro: {titulo_eliminado} | ID: {criterio_num} eliminado con éxito.")
                 eliminado = True
-    else:
-        for fila in libros:
-            if fila[1].lower() == criterio.lower():
-                libros.remove(fila)
-                print(f"Libro '{criterio}' eliminado con éxito.")
-                eliminado = True
+    
     
     if eliminado == False:
         print("No se encontró el libro.")
