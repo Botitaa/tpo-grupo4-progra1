@@ -31,8 +31,11 @@ def buscar_libro_parcial(libros):
     print('\n----Busqueda de libros---')    
     print('1. Busqueda por titulo')    
     print('2. Busqueda por autor')    
-    opcion = input('\nSeleccione una opcion por favor:').strip()
-    
+    print('0. Volver')
+    opcion = input('\nSeleccione una opcion por favor: ').strip()
+    if opcion == '0':
+        print('Volviendo...')
+        return
     if opcion == '1':
         busqueda = input("Ingrese el título del libro a buscar: ").strip().lower()  # ingreso por teclado en minúsculas
         columna = 1
@@ -107,15 +110,28 @@ def eliminar_libro(libros):
         criterio_num = int(criterio)
         for fila in libros:
             if fila[0] == criterio_num:
-                titulo_eliminado = fila[1]
-                libros.remove(fila)
-                print(f"Libro: {titulo_eliminado} | ID: {criterio_num} eliminado con éxito.")
-                eliminado = True
-    
-    
+                mostrar_libros([fila])
+                confirmacion = input( '\nEsta seguro que quiere eliminar este libro? (S/N): ').lower().strip()
+                if confirmacion == 's':
+                    titulo_eliminado = fila[1]
+                    libros.remove(fila)
+                    print(f"\nLibro: {titulo_eliminado}  (ID: {criterio_num}) eliminado con éxito.")
+                    eliminado = True
+                else:#queda vacante el ID 
+                    print('\nOperacion cancelada, no se elimino el libro.')
+                break    
+            else:
+                print('Ingrese un ID valido por favor')
+                
     if eliminado == False:
         print("No se encontró el libro.")
+    else:
+        reordenar_ids(libros)
 
+def reordenar_ids(libros):
+    '''Reasigna los id de los libros consecutivamente desde 1'''
+    for i in range(len(libros)):
+        libros[i][0] = i + 1
 # ---- Gestión de usuarios ----
 
 def registrar_usuario(usuarios):
@@ -663,4 +679,5 @@ contrasenia = "admin1234"
 while True: 
 
     menu_principal()
+
 
