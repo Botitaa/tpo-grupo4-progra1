@@ -132,6 +132,8 @@ def reordenar_ids(libros):
     '''Reasigna los id de los libros consecutivamente desde 1'''
     for i in range(len(libros)):
         libros[i][0] = i + 1
+
+
 # ---- Gestión de usuarios ----
 
 def registrar_usuario(usuarios):
@@ -527,6 +529,30 @@ def renovacion_prestamos():
 
     pass
 
+# ---- Carga de Datos ----
+
+# libros
+def cargar_libros(ruta):
+    pass
+
+def guardar_libros(ruta, libros):
+    pass
+
+# usuarios
+def cargar_usuarios(ruta):
+    pass
+
+def guardar_usuarios(ruta, usuarios):
+    pass
+
+# prestamos
+def cargar_prestamos(ruta):
+    pass
+
+def guardar_prestamos(ruta, prestamos):
+    pass
+
+
 # ---- Gestión de menues ----
 
 def menu_principal():
@@ -679,5 +705,3 @@ contrasenia = "admin1234"
 while True: 
 
     menu_principal()
-
-
