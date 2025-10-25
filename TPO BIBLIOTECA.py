@@ -134,6 +134,20 @@ def reordenar_ids(libros):
         libros[i][0] = i + 1
 
 
+def reporte_stock_bajo(libros):
+    """Muestra un reporte de libros cuyo stock es menor a un umbral ingresado por el usuario.
+
+    Solicita al usuario un valor mínimo de stock y luego lista todos los libros
+    cuyo stock actual sea inferior a ese valor. Se muestra el título del libro,
+    su ID y la cantidad en stock para facilitar la reposición."""
+    minimo_stock = int(input("Ingrese el mínimo de stock: "))
+    print(f"\n--- Libros con stock menor a {minimo_stock} ---\n")
+    for libro in libros:
+        # cada libro es [ID, titulo, autor, disponible, cantidad]
+        if libro[4] < minimo_stock:
+            print(f"{libro[1]} (ID: {libro[0]}) - Stock: {libro[4]}")
+
+
 # ---- Gestión de usuarios ----
 
 def registrar_usuario(usuarios):
@@ -529,6 +543,94 @@ def renovacion_prestamos():
 
     pass
 
+def usuarios_con_mas_prestamos(prestamos):
+    """Muestra los usuarios ordenados por la cantidad de préstamos de mayor a menor.
+
+    Recorre la lista de préstamos para contar cuántos libros tiene prestados
+    cada usuario. Luego ordena estos valores de forma descendente y muestra
+    un máximo de 10 usuarios junto a la cantidad de préstamos que poseen."""
+    print("\n--- Usuarios con más préstamos ---\n")
+    nombres = []
+    cantidades = []
+    # Contar préstamos por usuario
+    for fila in prestamos:
+        usuario = fila[0]
+        if usuario in nombres:
+            posicion = nombres.index(usuario)
+            cantidades[posicion] += 1
+        else:
+            nombres.append(usuario)
+            cantidades.append(1)
+    # Ordenar por cantidad de préstamos (descendente)
+    for i in range(len(cantidades)):
+        for j in range(i + 1, len(cantidades)):
+            if cantidades[i] < cantidades[j]:
+                cantidades[i], cantidades[j] = cantidades[j], cantidades[i]
+                nombres[i], nombres[j] = nombres[j], nombres[i]
+    # Mostrar hasta los 10 primeros usuarios con más préstamos
+    for i in range(min(10, len(nombres))):
+        print(f"{nombres[i]} - préstamos: {cantidades[i]}")
+
+def libros_mas_prestados(prestamos):
+    """Muestra los libros ordenados por la cantidad de veces que fueron prestados.
+
+    Analiza la lista de préstamos para contar cuántas veces se ha prestado cada libro.
+    Posteriormente ordena estos valores de forma descendente y presenta un máximo
+    de 10 libros junto a la cantidad de veces que fueron prestados."""
+    print("\n--- Libros más prestados ---\n")
+    titulos = []
+    cantidades = []
+    # Contar préstamos por libro
+    for fila in prestamos:
+        libro = fila[1]
+        if libro in titulos:
+            posicion = titulos.index(libro)
+            cantidades[posicion] += 1
+        else:
+            titulos.append(libro)
+            cantidades.append(1)
+    # Ordenar por cantidad de préstamos (descendente)
+    for i in range(len(cantidades)):
+        for j in range(i + 1, len(cantidades)):
+            if cantidades[i] < cantidades[j]:
+                cantidades[i], cantidades[j] = cantidades[j], cantidades[i]
+                titulos[i], titulos[j] = titulos[j], titulos[i]
+    # Mostrar hasta los 10 primeros libros más prestados
+    for i in range(min(10, len(titulos))):
+        print(f"{titulos[i]} - Veces prestado: {cantidades[i]}")
+
+def morosos(prestamos):
+    """Muestra los usuarios morosos con la cantidad de días de atraso acumulados.
+
+    Para cada préstamo, calcula la diferencia en días entre la fecha de hoy y la
+    fecha límite. Si el préstamo está vencido, suma los días de atraso para cada
+    usuario. Finalmente, informa qué usuarios tienen retrasos y cuántos días acumulan."""
+    print("\n--- Morosos ---\n")
+    nombres = []
+    atrasos = []
+    hoy = date.today()
+    for fila in prestamos:
+        usuario = fila[0]
+        fecha_limite_str = fila[3]
+        partes = fecha_limite_str.split("/")
+        dia = int(partes[0])
+        mes = int(partes[1])
+        anio = int(partes[2])
+        fecha_limite = date(anio, mes, dia)
+        dias_atraso = (hoy - fecha_limite).days
+        if dias_atraso > 0:
+            if usuario in nombres:
+                posicion = nombres.index(usuario)
+                atrasos[posicion] += dias_atraso
+            else:
+                nombres.append(usuario)
+                atrasos.append(dias_atraso)
+    if len(nombres) == 0:
+        print("No hay morosos.")
+    else:
+        for i in range(len(nombres)):
+            print(f"{nombres[i]} - días de atraso acumulados: {atrasos[i]}")
+
 # ---- Carga de Datos ----
 
 # libros
@@ -588,6 +690,7 @@ def menu_libros():
     print("2. Buscar libro por título")
     print("3. Agregar libro")
     print("4. Eliminar libro")
+    print("5. Reporte de stock bajo")
     print("0. Volver al menú principal")
 
     opcion = input("Seleccione una opción: ")
@@ -602,6 +705,8 @@ def menu_libros():
         agregar_libro(libros)
     elif opcion == '4':
         eliminar_libro(libros)
+    elif opcion == '5':
+        reporte_stock_bajo(libros)
     elif opcion == '0':
         menu_principal()
     else:
@@ -643,6 +748,9 @@ def menu_prestamos():
     print("3. Devolver libro")
     print("4. Préstamos vencidos")
     print("5. Renovacion")
+    print("6. Usuarios con más préstamos")
+    print("7. Libros más prestados")
+    print("8. Morosos")
     print("0. Volver al menú principal")
     
     opcion = input("Seleccione una opción: ")
@@ -659,6 +767,12 @@ def menu_prestamos():
         prestamos_vencidos(prestamos)
     elif opcion == "5":
         renovacion_prestamos()
+    elif opcion == '6':
+        usuarios_con_mas_prestamos(prestamos)
+    elif opcion == '7':
+        libros_mas_prestados(prestamos)
+    elif opcion == '8':
+        morosos(prestamos)
     elif opcion == '0':
         menu_principal()
     else:
