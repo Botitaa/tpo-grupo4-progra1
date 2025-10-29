@@ -1,0 +1,50 @@
+1,El Quijote,Miguel de Cervantes,True,14
+2,Cien Años de Soledad,Gabriel García Márquez,True,17
+3,Rayuela,Julio Cortázar,True,17
+4,Ficciones,Jorge Luis Borges,True,17
+5,La Metamorfosis,Franz Kafka,True,3
+6,1984,George Orwell,True,18
+7,Crimen y Castigo,Fiódor Dostoyevski,True,11
+8,Los Miserables,Victor Hugo,True,14
+9,Orgullo y Prejuicio,Jane Austen,True,20
+10,El Principito,Antoine de Saint-Exupéry,True,5
+11,La Odisea,Homero,True,16
+12,La Iliada,Homero,True,6
+13,Divina Comedia,Dante Alighieri,True,13
+14,Don Quijote de la Mancha,Miguel de Cervantes,True,16
+15,Pedro Páramo,Juan Rulfo,True,16
+16,La Casa de los Espíritus,Isabel Allende,True,3
+17,Drácula,Bram Stoker,True,5
+18,Frankenstein,Mary Shelley,True,11
+19,Moby Dick,Herman Melville,True,14
+20,El Retrato de Dorian Gray,Oscar Wilde,True,11
+21,El Guardián entre el Centeno,J. D. Salinger,True,5
+22,A Sangre Fría,Truman Capote,True,3
+23,Ensayo sobre la Ceguera,José Saramago,True,20
+24,El Amor en los Tiempos del Cólera,Gabriel García Márquez,True,3
+25,Los Detectives Salvajes,Roberto Bolaño,True,9
+26,La Sombra del Viento,Carlos Ruiz Zafón,True,8
+27,El Nombre de la Rosa,Umberto Eco,True,1
+28,Cumbres Borrascosas,Emily Brontë,True,9
+29,Madame Bovary,Gustave Flaubert,True,7
+30,Los Pilares de la Tierra,Ken Follett,True,3
+31,It,Stephen King,True,20
+32,Carrie,Stephen King,True,5
+33,Cementerio de Animales,Stephen King,True,10
+34,Harry Potter y la Piedra Filosofal,J. K. Rowling,True,13
+35,El Hobbit,J. R. R. Tolkien,True,3
+36,El Señor de los Anillos,J. R. R. Tolkien,True,4
+37,Crónica de una Muerte Anunciada,Gabriel García Márquez,True,11
+38,Doña Bárbara,Rómulo Gallegos,True,20
+39,Martín Fierro,José Hernández,True,5
+40,Antígona,Sófocles,True,15
+41,El Coronel no tiene quien le escriba,Gabriel García Márquez,True,10
+42,Donde Habitan los Ángeles,Claudia Celis,True,18
+43,El Túnel,Ernesto Sabato,True,12
+44,Sobrevivir al Naufragio,Jean Rhys,True,19
+45,Las Aventuras de Tom Sawyer,Mark Twain,True,13
+46,El Viejo y el Mar,Ernest Hemingway,True,2
+47,Fahrenheit 451,Ray Bradbury,True,13
+48,El Alquimista,Paulo Coelho,True,14
+49,Siddhartha,Hermann Hesse,True,13
+50,La Insoportable Levedad del Ser,Milan Kundera,True,12

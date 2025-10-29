@@ -1,0 +1,50 @@
+Carla Romero,La Metamorfosis,26/09/2025,27/10/2025
+Agustín López,Harry Potter y la Piedra Filosofal,31/08/2025,03/10/2025
+Carla Romero,Madame Bovary,26/07/2025,13/10/2025
+Juan Pérez,El Hobbit,12/07/2025,17/10/2025
+Pedro Gómez,Moby Dick,31/07/2025,03/10/2025
+Carla Romero,Harry Potter y la Piedra Filosofal,14/08/2025,25/10/2025
+Agustín López,El Principito,20/07/2025,30/09/2025
+Juan Pérez,Crónica de una Muerte Anunciada,07/07/2025,27/10/2025
+María López,El Señor de los Anillos,21/08/2025,07/10/2025
+Federico Pérez,El Coronel no tiene quien le escriba,12/07/2025,25/10/2025
+Laura Torres,Ensayo sobre la Ceguera,25/09/2025,04/10/2025
+Carla Romero,Fahrenheit 451,29/09/2025,12/10/2025
+Sofía Sánchez,Crónica de una Muerte Anunciada,12/08/2025,11/10/2025
+Sofía Sánchez,La Casa de los Espíritus,10/07/2025,20/10/2025
+Pedro Gómez,Harry Potter y la Piedra Filosofal,31/07/2025,03/10/2025
+Martín Gutiérrez,Rayuela,17/08/2025,29/10/2025
+Juan Pérez,El Túnel,09/09/2025,05/10/2025
+Pedro Gómez,Cumbres Borrascosas,14/07/2025,01/10/2025
+Laura Torres,El Retrato de Dorian Gray,17/08/2025,11/10/2025
+Pedro Gómez,Pedro Páramo,05/08/2025,09/10/2025
+María López,Crónica de una Muerte Anunciada,16/09/2025,13/10/2025
+Laura Torres,Bajo la Misma Estrella,02/08/2025,21/10/2025
+Federico Pérez,El Viejo y el Mar,24/08/2025,25/10/2025
+Agustín López,La Metamorfosis,31/07/2025,16/10/2025
+Juan Pérez,Pedro Páramo,31/07/2025,04/10/2025
+Federico Pérez,Antígona,15/09/2025,28/10/2025
+Juan Pérez,Harry Potter y la Piedra Filosofal,29/07/2025,10/10/2025
+Martín Gutiérrez,El Viejo y el Mar,25/08/2025,23/10/2025
+María López,Crónica de una Muerte Anunciada,17/07/2025,12/10/2025
+Sofía Sánchez,El Principito,04/09/2025,28/10/2025
+Laura Torres,Orgullo y Prejuicio,09/08/2025,09/10/2025
+María López,Las Aventuras de Tom Sawyer,26/07/2025,08/10/2025
+Lucía Fernández,Fahrenheit 451,07/09/2025,10/10/2025
+María López,Cumbres Borrascosas,11/09/2025,21/10/2025
+Sofía Sánchez,Frankenstein,04/07/2025,20/10/2025
+Juan Pérez,El Principito,21/08/2025,07/10/2025
+Laura Torres,El Amor en los Tiempos del Cólera,05/08/2025,03/10/2025
+Sofía Sánchez,El Coronel no tiene quien le escriba,07/08/2025,28/10/2025
+Agustín López,Martín Fierro,18/09/2025,12/10/2025
+Martín Gutiérrez,El Retrato de Dorian Gray,27/09/2025,01/10/2025
+Carla Romero,Crónica de una Muerte Anunciada,08/08/2025,22/10/2025
+Federico Pérez,Las Aventuras de Tom Sawyer,22/09/2025,24/10/2025
+Laura Torres,El Coronel no tiene quien le escriba,21/09/2025,23/10/2025
+Pedro Gómez,Moby Dick,13/09/2025,19/10/2025
+Lucía Fernández,Frankenstein,30/08/2025,08/10/2025
+Lucía Fernández,Carrie,15/08/2025,13/10/2025
+Carla Romero,El Coronel no tiene quien le escriba,25/08/2025,29/10/2025
+Juan Pérez,Siddhartha,17/07/2025,04/10/2025
+Juan Pérez,El Nombre de la Rosa,12/09/2025,09/10/2025
+Agustín López,Martín Fierro,20/07/2025,26/10/2025

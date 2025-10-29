@@ -10,6 +10,14 @@ def limpiar_consola():
     print("\n" * 50) # Alternativa simple
     os.system('cls' if os.name == 'nt' else 'clear')
 
+def abrir_archivo_seguro(ruta, modo="r"):
+    "Abre un archivo intentando UTF-8 y luego Latin-1 si falla."
+    try:
+        return open(ruta, modo, encoding="utf-8")
+    except UnicodeDecodeError:
+        return open(ruta, modo, encoding="latin-1")
+
+
 # ---- Gestión de libros ----
 def matriz_transpuesta(matriz_libros):
     transpuesta = []
@@ -135,14 +143,6 @@ def eliminar_libro(libros):
                 
     if eliminado == False:
         print("No se encontró el libro.")
-    else:
-        reordenar_ids(libros)
-
-def reordenar_ids(libros):
-    'Reasigna los id de los libros consecutivamente desde 1'
-    for i in range(len(libros)):
-        libros[i][0] = i + 1
-
 
 def reporte_stock_bajo(libros):
     "Muestra un reporte de libros cuyo stock es menor a un umbral ingresado por el usuario."
@@ -660,37 +660,121 @@ def morosos(prestamos):
 
 # ---- Carga de Datos ---- Persistencia ---- #
 
-# libros
+# --- LIBROS ---
+
 def cargar_libros(ruta):
+    "Carga los libros desde un archivo de texto."
+    libros = []
     try:
-        with open(ruta, "r", encoding="utf-8") as f:
-            datos = [linea.strip().split(",") for linea in f.readlines()]
+        with abrir_archivo_seguro(ruta, "r") as archivo:
+            for linea in archivo:
+                datos = linea.strip().split(",")
+                if len(datos) == 5:
+                    id_libro = int(datos[0])
+                    titulo = datos[1]
+                    autor = datos[2]
+                    disponible = datos[3].lower() == "true"
+                    cantidad = int(datos[4])
+                    libros.append([id_libro, titulo, autor, disponible, cantidad])
         print("✅ Libros cargados correctamente.")
-        return datos
     except FileNotFoundError:
         print("⚠ No se encontró el archivo de libros. Se creará uno nuevo.")
-        return []
-    except Exception as e:
-        print("⚠ Error al cargar los libros:", e)
-        return []
+    except Exception as error:
+        print("⚠ Error al cargar los libros:", error)
+    return libros
 
 
 def guardar_libros(ruta, libros):
-    pass
+    "Guarda la matriz de libros en un archivo de texto."
+    try:
+        with abrir_archivo_seguro(ruta, "w") as archivo:
+            for libro in libros:
+                linea = ",".join(map(str, libro))
+                archivo.write(linea + "\n")
+        print("💾 Libros guardados correctamente.")
+    except Exception as error:
+        print("⚠ Error al guardar los libros:", error)
 
-# usuarios
+
+# --- USUARIOS ---
+
 def cargar_usuarios(ruta):
-    pass
+    "Carga los usuarios desde un archivo de texto."
+    usuarios = [[] for _ in range(6)]  # crear 6 listas vacías
+    try:
+        with abrir_archivo_seguro(ruta, "r") as archivo:
+            for linea in archivo:
+                datos = linea.strip().split(",")
+                if len(datos) == 6:
+                    usuarios[0].append(datos[0])                  # nombre
+                    usuarios[1].append(int(datos[1]))             # dni
+                    usuarios[2].append(int(datos[2]))             # tel
+                    usuarios[3].append(datos[3])                  # email
+                    usuarios[4].append(datos[4])                  # dirección
+                    usuarios[5].append(datos[5].lower() == "true")  # bloqueado
+        print("✅ Usuarios cargados correctamente.")
+    except FileNotFoundError:
+        print("⚠ No se encontró el archivo de usuarios. Se creará uno nuevo.")
+    except Exception as error:
+        print("⚠ Error al cargar los usuarios:", error)
+    return usuarios
+
 
 def guardar_usuarios(ruta, usuarios):
-    pass
+    "Guarda los usuarios en un archivo de texto."
+    try:
+        with abrir_archivo_seguro(ruta, "w") as archivo:
+            for i in range(len(usuarios[0])):
+                linea = f"{usuarios[0][i]},{usuarios[1][i]},{usuarios[2][i]},{usuarios[3][i]},{usuarios[4][i]},{usuarios[5][i]}"
+                archivo.write(linea + "\n")
+        print("💾 Usuarios guardados correctamente.")
+    except Exception as error:
+        print("⚠ Error al guardar los usuarios:", error)
 
-# prestamos
+
+def actualizar_diccionario_usuarios():
+    usuarios_dict.clear()
+    for i in range(len(usuarios[0])):
+        usuarios_dict[usuarios[1][i]] = {
+            "nombre": usuarios[0][i],
+            "telefono": usuarios[2][i],
+            "email": usuarios[3][i],
+            "direccion": usuarios[4][i],
+            "bloqueado": usuarios[5][i]
+        }
+
+
+# --- PRÉSTAMOS ---
+
 def cargar_prestamos(ruta):
-    pass
+    "Carga los préstamos desde un archivo de texto."
+    prestamos = []
+    try:
+        with abrir_archivo_seguro(ruta, "r") as archivo:
+            for linea in archivo:
+                datos = linea.strip().split(",")
+                if len(datos) == 4:
+                    prestamos.append(datos)
+        print("✅ Préstamos cargados correctamente.")
+    except FileNotFoundError:
+        print("⚠ No se encontró el archivo de préstamos. Se creará uno nuevo.")
+    except Exception as error:
+        print("⚠ Error al cargar los préstamos:", error)
+    return prestamos
+
 
 def guardar_prestamos(ruta, prestamos):
-    pass
+    "Guarda los préstamos en un archivo de texto."
+    try:
+        with abrir_archivo_seguro(ruta, "w") as archivo:
+            for prestamo in prestamos:
+                linea = ",".join(map(str, prestamo))
+                archivo.write(linea + "\n")
+        print("💾 Préstamos guardados correctamente.")
+    except Exception as error:
+        print("⚠ Error al guardar los préstamos:", error)
+
+
 
 # ---- Gestión de menues ----
 
@@ -768,6 +852,10 @@ def menu_libros():
 
 
 def menu_usuarios():
+
+    #actulizamos porque si hay algun cambio dps no va a aparecer
+
+    actualizar_diccionario_usuarios()
 
     print("\n--- Gestión de Usuarios ---")
     print("1. Registrar usuario")
@@ -849,27 +937,20 @@ def menu_prestamos():
     except Exception as error:
         print("⚠ Se produjo un error al ejecutar la opción seleccionada:", error)
 
-#Programa Principal
-
-libros = [
-    #ID, Titulo, Autor, Disponibilidad, Cantidad en stock
-    [1, "El Quijote", "Cervantes", True, 20],
-    [2, "Cien Años de Soledad", "G. García Márquez", True, 2],
-    [3, "La Odisea", "Homero", False, 0]
-]
-
-usuarios = [       
-    # lista de usuarios
-    # nombre, DNI, tel, mail, direcciónx, bloqueado
     
-    ['juan', 'maria', 'pedro'],
-    [46962189, 12345678, 98765432],
-    [1126030810, 1189077253, 1178540819],
-    ['juanagarcia@hotmail.com', 'mariacrisler@gmail.com', 'pedrotrota@gmail.com'],
-    ['Calle Falsa 123', 'Avenida Siempre Viva 742', 'Boulevard de los Sueños Rotos 456'],
-    [True, False, False]  # bloqueado
+# --- Programa Principal ---
 
-]
+# --- Rutas de archivos ---
+ruta_libros = "libros.txt"
+ruta_usuarios = "usuarios.txt"
+ruta_prestamos = "prestamos.txt"
+
+# --- Cargar datos al iniciar ---
+print("📚 Cargando datos del sistema de biblioteca...\n")
+
+libros = cargar_libros(ruta_libros)
+usuarios = cargar_usuarios(ruta_usuarios)
+prestamos = cargar_prestamos(ruta_prestamos)
 
 # --- Diccionario de usuarios (estructura auxiliar para consultas rápidas) ---
 usuarios_dict = {}
@@ -883,22 +964,46 @@ for i in range(len(usuarios[0])):
         "bloqueado": usuarios[5][i]
     }
 
-prestamos = [
-    # lista de préstamos (usuario, libro, fecha ingreso, fecha maxima de devolución)
+# Si los archivos están vacíos, inicializa listas mínimas
+if libros == []:
+    libros = [
+        [1, "El Quijote", "Cervantes", True, 20],
+        [2, "Cien Años de Soledad", "G. García Márquez", True, 2],
+        [3, "La Odisea", "Homero", False, 0]
+    ]
 
-    ["juan", "El Quijote", "01/07/2025", "27/07/2025"],
-    ["juan", "El Quijote", "01/07/2025", "27/07/2025"],
-    ["juan", "El Quijote", "01/07/2025", "27/07/2025"]
-]
+if usuarios == [[] for _ in range(6)]:
+    usuarios = [       
+        ['juan', 'maria', 'pedro'],
+        [46962189, 12345678, 98765432],
+        [1126030810, 1189077253, 1178540819],
+        ['juanagarcia@hotmail.com', 'mariacrisler@gmail.com', 'pedrotrota@gmail.com'],
+        ['Calle Falsa 123', 'Avenida Siempre Viva 742', 'Boulevard de los Sueños Rotos 456'],
+        [True, False, False]
+    ]
 
-prestamos_morosos = [
-    # lista de préstamos morosos (usuario, libro, fecha ingreso, fecha maxima de devolución)
-
-    ["juan", "El Quijote", "01/07/2025", "27/07/2025"]
-]
+if prestamos == []:
+    prestamos = [
+        ["juan", "El Quijote", "01/07/2025", "27/07/2025"]
+    ]
 
 contrasenia = "admin1234"
 
-while True: 
+# --- Bucle principal ---
+try:
+    while True:
+        menu_principal()
 
-    menu_principal()
+except KeyboardInterrupt:
+    print("\n⚠ Programa interrumpido manualmente.")
+
+except Exception as error:
+    print("⚠ Ocurrió un error inesperado:", error)
+
+finally:
+    # --- Guardar datos automáticamente al cerrar ---
+    print("\n💾 Guardando datos antes de salir...")
+    guardar_libros(ruta_libros, libros)
+    guardar_usuarios(ruta_usuarios, usuarios)
+    guardar_prestamos(ruta_prestamos, prestamos)
+    print("✅ Datos guardados correctamente. ¡Hasta luego!")
