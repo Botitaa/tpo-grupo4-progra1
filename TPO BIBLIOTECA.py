@@ -146,14 +146,17 @@ def reordenar_ids(libros):
 
 def reporte_stock_bajo(libros):
     "Muestra un reporte de libros cuyo stock es menor a un umbral ingresado por el usuario."
+    try:
+        minimo_stock = int(input("Ingrese el mínimo de stock: "))
+    except ValueError:
+        print("⚠ Ingrese un número entero válido.")
+        return
 
-
-    minimo_stock = int(input("Ingrese el mínimo de stock: "))
     print(f"\n--- Libros con stock menor a {minimo_stock} ---\n")
     for libro in libros:
-        # cada libro es [ID, titulo, autor, disponible, cantidad]
         if libro[4] < minimo_stock:
             print(f"{libro[1]} (ID: {libro[0]}) - Stock: {libro[4]}")
+
 
 
 # ---- Gestión de usuarios ----
@@ -460,7 +463,7 @@ def editar_usuario(usuarios):
 
 def buscar_usuario_por_dni_dicc(diccionario):
     "Consulta para buscar un unico usuario"
-    
+
     try:
         dni = int(input("Ingrese el DNI a buscar: "))
         if dni in diccionario:
@@ -655,11 +658,22 @@ def morosos(prestamos):
         for i in range(len(nombres)):
             print(f"{nombres[i]} - días de atraso acumulados: {atrasos[i]}")
 
-# ---- Carga de Datos ----
+# ---- Carga de Datos ---- Persistencia ---- #
 
 # libros
 def cargar_libros(ruta):
-    pass
+    try:
+        with open(ruta, "r", encoding="utf-8") as f:
+            datos = [linea.strip().split(",") for linea in f.readlines()]
+        print("✅ Libros cargados correctamente.")
+        return datos
+    except FileNotFoundError:
+        print("⚠ No se encontró el archivo de libros. Se creará uno nuevo.")
+        return []
+    except Exception as e:
+        print("⚠ Error al cargar los libros:", e)
+        return []
+
 
 def guardar_libros(ruta, libros):
     pass
@@ -688,25 +702,32 @@ def menu_principal():
     print("3. Gestión de Préstamos")
     print("0. Salir")
 
-    opcion = input("Seleccione una opción: ")
+    try:
+        opcion = input("Seleccione una opción: ").strip()
+    except Exception as error:
+        print("⚠ Error inesperado al leer la opción:", error)
+        return
+
     limpiar_consola()
 
+    try:
+        if opcion == '1':
+            menu_libros()
+        elif opcion == '2':
+            menu_usuarios()
+        elif opcion == '3':
+            menu_prestamos()
+        elif opcion == '0':
+            print("Saliendo del sistema...")
+            quit()
+        else:
+            print("Opción inválida, intente nuevamente.")
+    except Exception as error:
+        print("⚠ Se produjo un error al ejecutar la opción:", error)
 
-    if opcion == '1':
-        menu_libros()
-    elif opcion == '2':
-        menu_usuarios()
-    elif opcion == '3':
-        menu_prestamos()
-    elif opcion == '0':
-        print("Saliendo del sistema...")
-        quit()
-    else:
-        print("Opción inválida, intente nuevamente.")
 
 
 def menu_libros():
-
 
     print("\n--- Gestión de Libros ---")
     print("1. Mostrar libros")
@@ -717,30 +738,37 @@ def menu_libros():
     print("6. Reporte de stock bajo")
     print("0. Volver al menú principal")
 
-    opcion = input("Seleccione una opción: ")
+    try:
+        opcion = input("Seleccione una opción: ").strip()
+    except Exception as error:
+        print("⚠ Error inesperado al leer la opción:", error)
+        return
     
     limpiar_consola()
-    
-    if opcion == '1':
-        mostrar_libros(libros)
-    elif opcion == '2':
-        buscar_libro_parcial(libros)
-    elif opcion == "3":
-        editar_libro(libros)
-    elif opcion == '4':
-        agregar_libro(libros)
-    elif opcion == '5':
-        eliminar_libro(libros)
-    elif opcion == '6':
-        reporte_stock_bajo(libros)
-    elif opcion == '0':
-        menu_principal()
-    else:
-        print("Opción inválida, intente nuevamente.")
+
+    try:
+        if opcion == '1':
+            mostrar_libros(libros)
+        elif opcion == '2':
+            buscar_libro_parcial(libros)
+        elif opcion == '3':
+            editar_libro(libros)
+        elif opcion == '4':
+            agregar_libro(libros)
+        elif opcion == '5':
+            eliminar_libro(libros)
+        elif opcion == '6':
+            reporte_stock_bajo(libros)
+        elif opcion == '0':
+            menu_principal()
+        else:
+            print("⚠ Opción inválida, intente nuevamente.")
+    except Exception as error:
+        print("⚠ Se produjo un error al ejecutar la opción seleccionada:", error)
+
 
 def menu_usuarios():
 
-    
     print("\n--- Gestión de Usuarios ---")
     print("1. Registrar usuario")
     print("2. Mostrar usuarios")
@@ -749,63 +777,77 @@ def menu_usuarios():
     print("5. Buscar usuario por DNI")
     print("0. Volver al menú principal")
 
-    opcion = input("Seleccione una opción: ")
-    
+    try:
+        opcion = input("Seleccione una opción: ").strip()
+    except Exception as error:
+        print("⚠ Error inesperado al leer la opción:", error)
+        return
+
     limpiar_consola()
 
-    if opcion == '1':
-        registrar_usuario(usuarios)
-    elif opcion == '2':
-        mostrar_usuarios(usuarios)
-    elif opcion == '3':
-        editar_usuario(usuarios)
-    elif opcion == '4':
-        eliminar_usuario(usuarios)
-    elif opcion == '5':
-        buscar_usuario_por_dni_dicc(usuarios_dict)
-    elif opcion == '0':
-        menu_principal()    
-    else:
-        print("Opción inválida, intente nuevamente.")
+    try:
+        if opcion == '1':
+            registrar_usuario(usuarios)
+        elif opcion == '2':
+            mostrar_usuarios(usuarios)
+        elif opcion == '3':
+            editar_usuario(usuarios)
+        elif opcion == '4':
+            eliminar_usuario(usuarios)
+        elif opcion == '5':
+            buscar_usuario_por_dni_dicc(usuarios_dict)
+        elif opcion == '0':
+            menu_principal()
+        else:
+            print("⚠ Opción inválida. Intente nuevamente.")
+    except Exception as error:
+        print("⚠ Se produjo un error al ejecutar la opción seleccionada:", error)
+
 
 def menu_prestamos():
 
-    
     print("\n--- Gestión de Préstamos ---")
     print("1. Listar préstamos")
     print("2. Prestar libro")
     print("3. Devolver libro")
     print("4. Préstamos vencidos")
-    print("5. Renovacion")
+    print("5. Renovación")
     print("6. Usuarios con más préstamos")
     print("7. Libros más prestados")
     print("8. Morosos")
     print("0. Volver al menú principal")
     
-    opcion = input("Seleccione una opción: ")
+    try:
+        opcion = input("Seleccione una opción: ").strip()
+    except Exception as error:
+        print("⚠ Error inesperado al leer la opción:", error)
+        return
 
     limpiar_consola()
 
-    if opcion == '1':
-        listar_prestamos(prestamos)
-    elif opcion == '2':
-        prestar_libro(libros, usuarios, prestamos)
-    elif opcion == '3':
-        devolver_libro(libros, prestamos)
-    elif opcion == '4':
-        prestamos_vencidos(prestamos)
-    elif opcion == "5":
-        renovacion_prestamos()
-    elif opcion == '6':
-        usuarios_con_mas_prestamos(prestamos)
-    elif opcion == '7':
-        libros_mas_prestados(prestamos)
-    elif opcion == '8':
-        morosos(prestamos)
-    elif opcion == '0':
-        menu_principal()
-    else:
-        print("Opción inválida, intente nuevamente.")
+    try:
+        if opcion == '1':
+            listar_prestamos(prestamos)
+        elif opcion == '2':
+            prestar_libro(libros, usuarios, prestamos)
+        elif opcion == '3':
+            devolver_libro(libros, prestamos)
+        elif opcion == '4':
+            prestamos_vencidos(prestamos)
+        elif opcion == '5':
+            renovacion_prestamos()
+        elif opcion == '6':
+            usuarios_con_mas_prestamos(prestamos)
+        elif opcion == '7':
+            libros_mas_prestados(prestamos)
+        elif opcion == '8':
+            morosos(prestamos)
+        elif opcion == '0':
+            menu_principal()
+        else:
+            print("⚠ Opción inválida, intente nuevamente.")
+    except Exception as error:
+        print("⚠ Se produjo un error al ejecutar la opción seleccionada:", error)
 
 #Programa Principal
 
