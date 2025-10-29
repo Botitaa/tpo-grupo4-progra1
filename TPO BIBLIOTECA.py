@@ -458,6 +458,24 @@ def editar_usuario(usuarios):
         else:
             print("Elija una opcion correcta: ")
 
+def buscar_usuario_por_dni_dicc(diccionario):
+    "Consulta para buscar un unico usuario"
+    
+    try:
+        dni = int(input("Ingrese el DNI a buscar: "))
+        if dni in diccionario:
+            datos = diccionario[dni]
+            print(f"\nUsuario encontrado:")
+            print(f"Nombre: {datos['nombre']}")
+            print(f"Teléfono: {datos['telefono']}")
+            print(f"Email: {datos['email']}")
+            print(f"Dirección: {datos['direccion']}")
+            print(f"Estado: {'Bloqueado' if datos['bloqueado'] else 'Activo'}\n")
+        else:
+            print("No se encontró un usuario con ese DNI.")
+    except ValueError:
+        print("DNI inválido. Ingrese solo números.")
+
 
 
 # ---- Gestión de préstamos ----
@@ -614,7 +632,7 @@ def morosos(prestamos):
     nombres = []
     atrasos = []
     hoy = date.today()
-    
+
     for fila in prestamos:
         usuario = fila[0]
         fecha_limite_str = fila[3]
@@ -728,6 +746,7 @@ def menu_usuarios():
     print("2. Mostrar usuarios")
     print("3. Editar usuario")
     print("4. Eliminar usuario")
+    print("5. Buscar usuario por DNI")
     print("0. Volver al menú principal")
 
     opcion = input("Seleccione una opción: ")
@@ -742,6 +761,8 @@ def menu_usuarios():
         editar_usuario(usuarios)
     elif opcion == '4':
         eliminar_usuario(usuarios)
+    elif opcion == '5':
+        buscar_usuario_por_dni_dicc(usuarios_dict)
     elif opcion == '0':
         menu_principal()    
     else:
@@ -807,6 +828,18 @@ usuarios = [
     [True, False, False]  # bloqueado
 
 ]
+
+# --- Diccionario de usuarios (estructura auxiliar para consultas rápidas) ---
+usuarios_dict = {}
+
+for i in range(len(usuarios[0])):
+    usuarios_dict[usuarios[1][i]] = {
+        "nombre": usuarios[0][i],
+        "telefono": usuarios[2][i],
+        "email": usuarios[3][i],
+        "direccion": usuarios[4][i],
+        "bloqueado": usuarios[5][i]
+    }
 
 prestamos = [
     # lista de préstamos (usuario, libro, fecha ingreso, fecha maxima de devolución)
