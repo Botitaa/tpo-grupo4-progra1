@@ -28,18 +28,21 @@ def mostrar_libros(matriz_libros):
 
 def buscar_libro_parcial(libros):
     """Busca y muestra libros por parte del txto del titulo o del autor."""
+
     print('\n----Busqueda de libros---')    
     print('1. Busqueda por titulo')    
     print('2. Busqueda por autor')    
     print('0. Volver')
+
     opcion = input('\nSeleccione una opcion por favor: ').strip()
+
     if opcion == '0':
         print('Volviendo...')
         return
-    if opcion == '1':
+    elif opcion == '1':
         busqueda = input("Ingrese el título del libro a buscar: ").strip().lower()  # ingreso por teclado en minúsculas
         columna = 1
-    if opcion == '2':
+    elif opcion == '2':
         busqueda = input("Ingrese el autor del libro a buscar: ").strip().lower()  # ingreso por teclado en minúsculas
         columna = 2
     else:
@@ -55,9 +58,15 @@ def buscar_libro_parcial(libros):
         print('No se encontro ningun libro con ese texto')
         return []
     
-    print('\nLibros encotrados:')
+    limpiar_consola()
+    
+    print(f"Busqueda realizada: {busqueda} \nLibros encotrados: ")
     mostrar_libros(encontrados)
     return encontrados
+
+def editar_libro(libros):
+    print("en desarollo")
+    pass
 
 def agregar_libro(libros):
     """Agrega un nuevo libro a la matriz de libros."""
@@ -99,7 +108,8 @@ def agregar_libro(libros):
     print(f'Libro "{titulo}" agregado con exito.')
 
 def eliminar_libro(libros):
-    """Elimina un libro de la matriz de libros por ID."""
+    "Elimina un libro de la matriz de libros por ID."
+
     print("\n--- Eliminar Libro ---\n")
     mostrar_libros(libros)
     criterio = input("\nIngrese el ID del libro a eliminar: ").strip()
@@ -129,17 +139,15 @@ def eliminar_libro(libros):
         reordenar_ids(libros)
 
 def reordenar_ids(libros):
-    '''Reasigna los id de los libros consecutivamente desde 1'''
+    'Reasigna los id de los libros consecutivamente desde 1'
     for i in range(len(libros)):
         libros[i][0] = i + 1
 
 
 def reporte_stock_bajo(libros):
-    """Muestra un reporte de libros cuyo stock es menor a un umbral ingresado por el usuario.
+    "Muestra un reporte de libros cuyo stock es menor a un umbral ingresado por el usuario."
 
-    Solicita al usuario un valor mínimo de stock y luego lista todos los libros
-    cuyo stock actual sea inferior a ese valor. Se muestra el título del libro,
-    su ID y la cantidad en stock para facilitar la reposición."""
+
     minimo_stock = int(input("Ingrese el mínimo de stock: "))
     print(f"\n--- Libros con stock menor a {minimo_stock} ---\n")
     for libro in libros:
@@ -152,8 +160,8 @@ def reporte_stock_bajo(libros):
 
 def registrar_usuario(usuarios):
 
-    # Asegurar estructura mínima de 5 listas (por si acaso)
-    while len(usuarios) < 5:
+    # Asegurar estructura mínima de 6 listas (por si acaso)
+    while len(usuarios) < 6:
         usuarios.append([])
 
     print("\n--- Registro de Usuario ---\n")
@@ -178,7 +186,7 @@ def registrar_usuario(usuarios):
         else:
             validado = True
 
-    usuarios[0].append(nombre)
+   
 
     # ------- DNI -------
     validado = False
@@ -201,7 +209,7 @@ def registrar_usuario(usuarios):
 
         validado = True
 
-    usuarios[1].append(int(documento))
+    
 
     # ------- Teléfono (10 dígitos y empieza con 11) -------
     validado = False
@@ -227,7 +235,7 @@ def registrar_usuario(usuarios):
 
         validado = True
 
-    usuarios[2].append(int(telefono))
+    
 
     # ------- Email (debe tener @ y un . después) -------
     validado = False
@@ -252,8 +260,6 @@ def registrar_usuario(usuarios):
 
         validado = True
 
-    usuarios[3].append(email)
-
     # ------- Dirección (debe tener letras y números) -------
     validado = False
     while not validado:
@@ -272,7 +278,12 @@ def registrar_usuario(usuarios):
 
         validado = True
 
+    usuarios[0].append(nombre)
+    usuarios[1].append(int(documento))
+    usuarios[2].append(int(telefono))
+    usuarios[3].append(email)
     usuarios[4].append(direccion)
+    usuarios[5].append(False)
 
     print(f"\n✅ {nombre} (DNI {documento}) registrado con éxito.\n")
     return usuarios
@@ -303,46 +314,56 @@ def mostrar_usuarios(usuarios):
 
 
 def eliminar_usuario(usuarios):
-    """Elimina un usuario """
-
-    nombre = str(input("Ingrese el nombre del usuario a eliminar: "))
-
-    if nombre not in usuarios[0]:
-        print("El usuario no existe.")
-        return
+    "Eliminar un usuario "
 
     intento = input("Ingrese la contraseña de administrador para confirmar: ")
 
     if intento != contrasenia:
         print("Contraseña incorrecta. Operación cancelada.")
         return
-    
-    if contrasenia == intento:
-        indice = usuarios[0].index(nombre)
-        for u in usuarios:
-            u.pop(indice)
-    
-    print(f"Usuario '{nombre}' eliminado con éxito.")
-    
 
+    dni = input("Ingrese el DNI del usuario a eliminar: ").strip()
+
+    if not dni.isdigit():
+        print("El DNI debe contener solo números.")
+        return
+
+    dni = int(dni)
+
+    if dni not in usuarios[1]:
+        print("No existe ningún usuario con ese DNI.")
+        return
+    else:
+        confirmacion = input( '\nEsta seguro que quiere eliminar este libro? (S/N): ').lower().strip()
+        if confirmacion == 's':
+            indice = usuarios[1].index(dni)
+            for u in usuarios:
+                u.pop(indice)
+
+    print(f"Usuario con DNI {dni} eliminado con éxito.")
 
 def editar_usuario(usuarios):
-    """Permite modificar el nombre de un usuario."""
-    
-    nombre = str(input("Ingrese el nombre del usuario a editar: ")).lower
-
-    if nombre not in usuarios[0]:
-        print("El usuario no existe.")
-        return
-    
-    indice = usuarios[0].index(nombre)
+    "Permite modificar el nombre de un usuario."
     
     intento = input("Ingrese la contraseña de administrador para confirmar: ")
 
     if intento != contrasenia:
         print("Contraseña incorrecta. Operación cancelada.")
         return
-    
+
+    dni_str = input("Ingrese el DNI del usuario a editar: ").strip()
+
+    if not dni_str.isdigit():
+        print("El DNI debe contener solo números.")
+        return
+
+    dni = int(dni_str)
+
+    if dni not in usuarios[1]:
+        print("El usuario no existe.")
+        return
+
+    indice = usuarios[1].index(dni)
     
     confirmado = False
     while not confirmado:
@@ -451,16 +472,9 @@ def listar_prestamos(matriz_prestamos):
 
 
 def prestar_libro(libros, usuarios, prestamos):
-    """Registra un préstamo si hay stock y el usuario existe."""
+    "Registra un préstamo si hay stock y el usuario existe."
 
-    libro_prestar = input("Ingrese el título del libro a prestar: ")
-
-    if libro_prestar not in [libro[1] for libro in libros]:
-        print("El libro no existe en la biblioteca.")
-        return
-    elif libros[[libro[1] for libro in libros].index(libro_prestar)][4] <= 0:
-        print("No hay stock disponible para este libro.")
-        return
+    libro_prestar = buscar_libro_parcial(libros)
 
     usuario_prestar = input("Ingrese el nombre del usuario: ")
 
@@ -485,7 +499,7 @@ def prestar_libro(libros, usuarios, prestamos):
     print("Préstamo registrado con éxito.", prestamos[-1])
 
 def devolver_libro(libros, prestamos):
-    """Devuelve un libro prestado y actualiza el stock."""
+    "Devuelve un libro prestado y actualiza el stock."
     
     usuario_devolver = input("Ingrese el nombre del usuario que devuelve el libro: ")
     libro_devolver = input("Ingrese el título del libro a devolver: ")
@@ -501,7 +515,7 @@ def devolver_libro(libros, prestamos):
 
 
 def prestamos_vencidos(prestamos):
-    """Muestra los préstamos que han vencido."""
+    "Muestra los préstamos que han vencido."
     hoy = date.today()
     print("\n--- Préstamos Vencidos ---\n")
     print(f"{'Usuario':<15} | {'Libro':<25} | {'Fecha ingreso':<15} | {'Fecha límite':<15}")
@@ -544,11 +558,8 @@ def renovacion_prestamos():
     pass
 
 def usuarios_con_mas_prestamos(prestamos):
-    """Muestra los usuarios ordenados por la cantidad de préstamos de mayor a menor.
+    "Muestra los usuarios ordenados por la cantidad de préstamos de mayor a menor."
 
-    Recorre la lista de préstamos para contar cuántos libros tiene prestados
-    cada usuario. Luego ordena estos valores de forma descendente y muestra
-    un máximo de 10 usuarios junto a la cantidad de préstamos que poseen."""
     print("\n--- Usuarios con más préstamos ---\n")
     nombres = []
     cantidades = []
@@ -572,11 +583,8 @@ def usuarios_con_mas_prestamos(prestamos):
         print(f"{nombres[i]} - préstamos: {cantidades[i]}")
 
 def libros_mas_prestados(prestamos):
-    """Muestra los libros ordenados por la cantidad de veces que fueron prestados.
+    "Muestra los libros ordenados por la cantidad de veces que fueron prestados."
 
-    Analiza la lista de préstamos para contar cuántas veces se ha prestado cada libro.
-    Posteriormente ordena estos valores de forma descendente y presenta un máximo
-    de 10 libros junto a la cantidad de veces que fueron prestados."""
     print("\n--- Libros más prestados ---\n")
     titulos = []
     cantidades = []
@@ -600,15 +608,13 @@ def libros_mas_prestados(prestamos):
         print(f"{titulos[i]} - Veces prestado: {cantidades[i]}")
 
 def morosos(prestamos):
-    """Muestra los usuarios morosos con la cantidad de días de atraso acumulados.
+    "Muestra los usuarios morosos con la cantidad de días de atraso acumulados."
 
-    Para cada préstamo, calcula la diferencia en días entre la fecha de hoy y la
-    fecha límite. Si el préstamo está vencido, suma los días de atraso para cada
-    usuario. Finalmente, informa qué usuarios tienen retrasos y cuántos días acumulan."""
     print("\n--- Morosos ---\n")
     nombres = []
     atrasos = []
     hoy = date.today()
+    
     for fila in prestamos:
         usuario = fila[0]
         fecha_limite_str = fila[3]
@@ -654,7 +660,6 @@ def cargar_prestamos(ruta):
 def guardar_prestamos(ruta, prestamos):
     pass
 
-
 # ---- Gestión de menues ----
 
 def menu_principal():
@@ -687,10 +692,11 @@ def menu_libros():
 
     print("\n--- Gestión de Libros ---")
     print("1. Mostrar libros")
-    print("2. Buscar libro por título")
-    print("3. Agregar libro")
-    print("4. Eliminar libro")
-    print("5. Reporte de stock bajo")
+    print("2. Buscar libro")
+    print("3. Editar libro")
+    print("4. Agregar libro")
+    print("5. Eliminar libro")
+    print("6. Reporte de stock bajo")
     print("0. Volver al menú principal")
 
     opcion = input("Seleccione una opción: ")
@@ -701,11 +707,13 @@ def menu_libros():
         mostrar_libros(libros)
     elif opcion == '2':
         buscar_libro_parcial(libros)
-    elif opcion == '3':
-        agregar_libro(libros)
+    elif opcion == "3":
+        editar_libro(libros)
     elif opcion == '4':
-        eliminar_libro(libros)
+        agregar_libro(libros)
     elif opcion == '5':
+        eliminar_libro(libros)
+    elif opcion == '6':
         reporte_stock_bajo(libros)
     elif opcion == '0':
         menu_principal()
