@@ -43,8 +43,9 @@ Federico Pérez,Las Aventuras de Tom Sawyer,22/09/2025,24/10/2025
 Laura Torres,El Coronel no tiene quien le escriba,21/09/2025,23/10/2025
 Pedro Gómez,Moby Dick,13/09/2025,19/10/2025
 Lucía Fernández,Frankenstein,30/08/2025,08/10/2025
-Lucía Fernández,Carrie,15/08/2025,13/10/2025
 Carla Romero,El Coronel no tiene quien le escriba,25/08/2025,29/10/2025
 Juan Pérez,Siddhartha,17/07/2025,04/10/2025
 Juan Pérez,El Nombre de la Rosa,12/09/2025,09/10/2025
 Agustín López,Martín Fierro,20/07/2025,26/10/2025
+agustin botana,El Quijote,29/10/2025,13/11/2025
+agustin botana,El Amor en los Tiempos del Cólera,29/10/2025,05/11/2025

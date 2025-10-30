@@ -1,4 +1,4 @@
-1,El Quijote,Miguel de Cervantes,True,14
+1,El Quijote,Miguel de Cervantes,True,13
 2,Cien Años de Soledad,Gabriel García Márquez,True,17
 3,Rayuela,Julio Cortázar,True,17
 4,Ficciones,Jorge Luis Borges,True,17
@@ -21,7 +21,7 @@
 21,El Guardián entre el Centeno,J. D. Salinger,True,5
 22,A Sangre Fría,Truman Capote,True,3
 23,Ensayo sobre la Ceguera,José Saramago,True,20
-24,El Amor en los Tiempos del Cólera,Gabriel García Márquez,True,3
+24,El Amor en los Tiempos del Cólera,Gabriel García Márquez,True,2
 25,Los Detectives Salvajes,Roberto Bolaño,True,9
 26,La Sombra del Viento,Carlos Ruiz Zafón,True,8
 27,El Nombre de la Rosa,Umberto Eco,True,1
@@ -29,7 +29,7 @@
 29,Madame Bovary,Gustave Flaubert,True,7
 30,Los Pilares de la Tierra,Ken Follett,True,3
 31,It,Stephen King,True,20
-32,Carrie,Stephen King,True,5
+32,Carrie,Stephen King,True,6
 33,Cementerio de Animales,Stephen King,True,10
 34,Harry Potter y la Piedra Filosofal,J. K. Rowling,True,13
 35,El Hobbit,J. R. R. Tolkien,True,3

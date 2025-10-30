@@ -48,3 +48,5 @@ Thiago Sánchez,28679950,1121278015,thiago28679950@gmail.com,Calle 43 Nº 647,Tr
 Noelia Pérez,45868396,1112955880,noelia45868396@gmail.com,Calle 161 Nº 6391,True
 Federica Pérez,26639981,1163879794,federica26639981@gmail.com,Calle 637 Nº 777,False
 Luciano Torres,24888570,1174874060,luciano24888570@gmail.com,Calle 853 Nº 8742,False
+agustin botana,46962109,1126030810,abotana@uade.edu.ar,corrientes 2182,False
+Carlos,18286600,1150115070,cebotana@outlook.com,Los Paraisos 415,False

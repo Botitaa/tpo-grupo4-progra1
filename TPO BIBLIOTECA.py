@@ -337,7 +337,7 @@ def eliminar_usuario(usuarios):
         print("No existe ningún usuario con ese DNI.")
         return
     else:
-        confirmacion = input( '\nEsta seguro que quiere eliminar este libro? (S/N): ').lower().strip()
+        confirmacion = input( '\nEsta seguro que quiere eliminar este usuario? (S/N): ').lower().strip()
         if confirmacion == 's':
             indice = usuarios[1].index(dni)
             for u in usuarios:
@@ -379,7 +379,11 @@ def editar_usuario(usuarios):
         print("6. Estado")
         print("0. volver")
 
-        opcion = int(input("Elija un campo para editar: "))
+        try:
+            opcion = int(input("Elija un campo para editar: "))
+        except ValueError:
+            print("Debe ingresar un número.")
+            continue
 
         if opcion == 0:
             confirmado = True
@@ -397,10 +401,10 @@ def editar_usuario(usuarios):
             elif not nuevo_nombre.replace(" ", "").isalpha():
                 print("El nombre solo debe contener letras y espacios. Intente nuevamente.")
             else:            
+                nombre_viejo = usuarios[0][indice]
                 usuarios[0][indice] = nuevo_nombre
                 print("Usuario editado con éxito.")
-                print(nombre,"cambio a:", nuevo_nombre)
-                nombre = nuevo_nombre
+                print(nombre_viejo, "cambió a:", nuevo_nombre)
         elif opcion == 2:
             #editar dni
             nuevo_dni = input("Ingrese el nuevo DNI del usuario: ")
@@ -492,10 +496,18 @@ def listar_prestamos(matriz_prestamos):
         print(f"{fila[0]:<15} | {fila[1]:<25} | {fila[2]:<15} | {fila[3]:<15}")
 
 
-def prestar_libro(libros, usuarios, prestamos):
+def prestar_libro(libros, usuarios,prestamos):
     "Registra un préstamo si hay stock y el usuario existe."
 
-    libro_prestar = buscar_libro_parcial(libros)
+    resultados = buscar_libro_parcial(libros)
+
+    # si buscar_libro_parcial devuelve lista vacía
+    if not resultados:
+        print("No se encontró ningún libro con ese nombre.")
+        return
+
+    # tomar el primer resultado
+    libro_prestar = resultados[0]
 
     usuario_prestar = input("Ingrese el nombre del usuario: ")
 
@@ -503,21 +515,29 @@ def prestar_libro(libros, usuarios, prestamos):
         print("El usuario no está registrado.")
         usuario_prestar = input("Ingrese un usuario válido: ")
 
-    suma = 0
+    # verificar cantidad de préstamos activos del usuario
+    cantidad_prestamos = sum(1 for p in prestamos if p[0] == usuario_prestar)
+    if cantidad_prestamos >= 3:
+        print("❌ El usuario superó el máximo de 3 préstamos.")
+        return
 
-    for i in prestamos:
-        if i[0] == usuario_prestar:
-            suma += 1
-        if suma >= 3:
-            print("supero el maximo de 3 prestamos")
-            return
+    # comprobar stock
+    if libro_prestar[4] <= 0:
+        print("❌ No hay ejemplares disponibles para préstamo.")
+        return
 
+    # registrar préstamo
     fecha_ingreso = date.today().strftime("%d/%m/%Y")
     fecha_limite = determinar_fecha_vencimiento(date.today())
 
-    prestamos.append([usuario_prestar, libro_prestar, fecha_ingreso, fecha_limite])
-    libros[[libro[1] for libro in libros].index(libro_prestar)][4] -= 1
-    print("Préstamo registrado con éxito.", prestamos[-1])
+    prestamos.append([usuario_prestar, libro_prestar[1], fecha_ingreso, fecha_limite])
+    indice_libro = [libro[1] for libro in libros].index(libro_prestar[1])
+    libros[indice_libro][4] -= 1
+
+    print("✅ Préstamo registrado con éxito.")
+    print(f"Usuario: {usuario_prestar}")
+    print(f"Libro: {libro_prestar[1]}")
+    print(f"Fecha límite: {fecha_limite}")
 
 def devolver_libro(libros, prestamos):
     "Devuelve un libro prestado y actualiza el stock."
@@ -558,7 +578,7 @@ def determinar_fecha_vencimiento(fecha_hoy):
     print("2. 15 días")
     print("3. 30 días")
 
-    opcion = input("Seleccione el plazo de devolución: ")
+    opcion = input("Seleccione una opcion para el plazo de devolución (1,2,3): ")
 
     dias_a_sumar = 0
     if opcion == '1':
