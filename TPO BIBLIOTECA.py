@@ -17,11 +17,6 @@ def abrir_archivo_seguro(ruta, modo="r"):
         return open(ruta, modo, encoding="utf-8")
     except UnicodeDecodeError:
         return open(ruta, modo, encoding="latin-1")
-    
-    # -------------------------------------------------------------
-# 🔹 FUNCIONES AUXILIARES NUEVAS
-# -------------------------------------------------------------
-from datetime import datetime
 
 def registrar_log(evento, detalle):
     """Registra eventos del sistema en log.txt"""
@@ -33,7 +28,6 @@ def registrar_log(evento, detalle):
             archivo.write(linea)
     except Exception as e:
         print(f"Error al registrar en log: {e}")
-
 
 
 # ---- Gestión de libros ----
@@ -90,9 +84,6 @@ def buscar_libro_parcial(libros):
     mostrar_libros(encontrados)
     return encontrados
 
-    # -------------------------------------------------------------
-# 🔹 EDITAR LIBRO 
-# -------------------------------------------------------------
 def editar_libro(libros):
     print("\n--- Editar libro ---")
     if not libros:
@@ -1247,3 +1238,4 @@ finally:
     GUARDAR_usuarios(ruta_usuarios, usuarios)
     GUARDAR_prestamos(ruta_prestamos, prestamos)
     print("✅ Datos guardados correctamente. ¡Hasta luego!")
+
