@@ -170,7 +170,7 @@ def editar_libro(libros):
             else:
                 print("Opción inválida.")
 
-        GUARDAR_libros(ruta_libros, libros)
+        guardar_libros(ruta_libros, libros)
         registrar_log("GUARDAR", f"Datos guardados tras edición de libro ID {id_libro}")
         print("Cambios guardados correctamente.")
 
@@ -760,7 +760,7 @@ def renovacion_prestamos():
     nueva_fecha = datetime(año, mes, dia) + timedelta(days=dias)
     prestamos[i][3] = nueva_fecha.strftime("%d/%m/%Y")
 
-    GUARDAR_prestamos(ruta_prestamos, prestamos)
+    guardar_prestamos(ruta_prestamos, prestamos)
     registrar_log("RENEW", f"{usuario} renovó '{libro}' +{dias} días (nuevo límite: {prestamos[i][3]})")
     print(f"Préstamo renovado. Nueva fecha: {prestamos[i][3]}")
    
@@ -870,7 +870,7 @@ def cargar_libros(ruta):
     return libros
 
 
-def GUARDAR_libros(ruta, libros):
+def guardar_libros(ruta, libros):
     "Guarda la matriz de libros en un archivo de texto."
     try:
         with abrir_archivo_seguro(ruta, "w") as archivo:
@@ -906,7 +906,7 @@ def cargar_usuarios(ruta):
     return usuarios
 
 
-def GUARDAR_usuarios(ruta, usuarios):
+def guardar_usuarios(ruta, usuarios):
     "Guarda los usuarios en un archivo de texto."
     try:
         with abrir_archivo_seguro(ruta, "w") as archivo:
@@ -949,7 +949,7 @@ def cargar_prestamos(ruta):
     return prestamos
 
 
-def GUARDAR_prestamos(ruta, prestamos):
+def guardar_prestamos(ruta, prestamos):
     "Guarda los préstamos en un archivo de texto."
     try:
         with abrir_archivo_seguro(ruta, "w") as archivo:
@@ -1230,9 +1230,10 @@ finally:
     registrar_log("SALIDA", "Cierre del sistema y guardado automático.")
     # --- Guardar datos automáticamente al cerrar ---
     print("\n💾 Guardando datos antes de salir...")
-    GUARDAR_libros(ruta_libros, libros)
-    GUARDAR_usuarios(ruta_usuarios, usuarios)
-    GUARDAR_prestamos(ruta_prestamos, prestamos)
+    guardar_libros(ruta_libros, libros)
+    guardar_usuarios(ruta_usuarios, usuarios)
+    guardar_prestamos(ruta_prestamos, prestamos)
     print("✅ Datos guardados correctamente. ¡Hasta luego!")
+
 
 
