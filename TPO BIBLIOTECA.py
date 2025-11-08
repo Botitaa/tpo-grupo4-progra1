@@ -697,9 +697,6 @@ def determinar_fecha_vencimiento(fecha_hoy):
     fecha_vencimiento = fecha_hoy + timedelta(days=dias_a_sumar)
     return fecha_vencimiento.strftime("%d/%m/%Y")
 
-    # -------------------------------------------------------------
-# 🔹 RENOVACIÓN DE PRÉSTAMOS 
-# -------------------------------------------------------------
 def renovacion_prestamos():
     print("\n--- Renovación de préstamos ---")
 
@@ -963,6 +960,41 @@ def GUARDAR_prestamos(ruta, prestamos):
     except Exception as error:
         print("⚠ Error al guardar los préstamos:", error)
 
+# ---- Gestión de backup ----
+
+def hacer_backup():
+    try:
+        archivo_libros = open("libros.txt")
+        lineas_libros = archivo_libros.readlines()
+        archivo_libros.close()
+
+        copia_libros = open("backup/libros_backup.txt", "w")
+        for linea in lineas_libros:
+            copia_libros.write(linea)
+        copia_libros.close()
+
+        archivo_usuarios = open("usuarios.txt")
+        lineas_usuarios = archivo_usuarios.readlines()
+        archivo_usuarios.close()
+
+        copia_usuarios = open("backup/usuarios_backup.txt", "w")
+        for linea in lineas_usuarios:
+            copia_usuarios.write(linea)
+        copia_usuarios.close()
+
+        archivo_prestamos = open("prestamos.txt")
+        lineas_prestamos = archivo_prestamos.readlines()
+        archivo_prestamos.close()
+
+        copia_prestamos = open("backup/prestamos_backup.txt", "w")
+        for linea in lineas_prestamos:
+            copia_prestamos.write(linea)
+        copia_prestamos.close()
+
+        print("✅ Backup automático realizado correctamente (en carpeta 'backup').")
+
+    except:
+        print("⚠ No se pudo realizar el backup automático. Verifique la carpeta 'backup'.")
 
 
 # ---- Gestión de menues ----
@@ -1181,42 +1213,6 @@ if prestamos == []:
 
 contrasenia = "admin1234"
 
-# .Backup.)
-
-def hacer_backup():
-    try:
-        archivo_libros = open("libros.txt")
-        lineas_libros = archivo_libros.readlines()
-        archivo_libros.close()
-
-        copia_libros = open("backup/libros_backup.txt", "w")
-        for linea in lineas_libros:
-            copia_libros.write(linea)
-        copia_libros.close()
-
-        archivo_usuarios = open("usuarios.txt")
-        lineas_usuarios = archivo_usuarios.readlines()
-        archivo_usuarios.close()
-
-        copia_usuarios = open("backup/usuarios_backup.txt", "w")
-        for linea in lineas_usuarios:
-            copia_usuarios.write(linea)
-        copia_usuarios.close()
-
-        archivo_prestamos = open("prestamos.txt")
-        lineas_prestamos = archivo_prestamos.readlines()
-        archivo_prestamos.close()
-
-        copia_prestamos = open("backup/prestamos_backup.txt", "w")
-        for linea in lineas_prestamos:
-            copia_prestamos.write(linea)
-        copia_prestamos.close()
-
-        print("✅ Backup automático realizado correctamente (en carpeta 'backup').")
-
-    except:
-        print("⚠ No se pudo realizar el backup automático. Verifique la carpeta 'backup'.")
-
 # --- Bucle principal ---
 
 try:
@@ -1238,4 +1234,5 @@ finally:
     GUARDAR_usuarios(ruta_usuarios, usuarios)
     GUARDAR_prestamos(ruta_prestamos, prestamos)
     print("✅ Datos guardados correctamente. ¡Hasta luego!")
+
 
