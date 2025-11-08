@@ -3,6 +3,7 @@
 import os
 from datetime import date, timedelta
 
+
 # ---- Utilidades ----
 
 def limpiar_consola():
@@ -16,6 +17,23 @@ def abrir_archivo_seguro(ruta, modo="r"):
         return open(ruta, modo, encoding="utf-8")
     except UnicodeDecodeError:
         return open(ruta, modo, encoding="latin-1")
+    
+    # -------------------------------------------------------------
+# 🔹 FUNCIONES AUXILIARES NUEVAS
+# -------------------------------------------------------------
+from datetime import datetime
+
+def registrar_log(evento, detalle):
+    """Registra eventos del sistema en log.txt"""
+    try:
+        tiempo = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
+        linea = f"{tiempo} [{evento}] {detalle}\n"
+        with abrir_archivo_seguro("log.txt", "a") as archivo:
+
+            archivo.write(linea)
+    except Exception as e:
+        print(f"Error al registrar en log: {e}")
+
 
 
 # ---- Gestión de libros ----
@@ -72,9 +90,103 @@ def buscar_libro_parcial(libros):
     mostrar_libros(encontrados)
     return encontrados
 
+    # -------------------------------------------------------------
+# 🔹 EDITAR LIBRO 
+# -------------------------------------------------------------
 def editar_libro(libros):
-    print("en desarollo")
-    pass
+    print("\n--- Editar libro ---")
+    if not libros:
+        print("No hay libros cargados.")
+        return
+
+    try:
+        mostrar_libros(libros)
+        entrada = input("\nIngrese el ID del libro a editar (o 0/salir para cancelar): ").strip().lower()
+        if entrada in ("0", "salir"):
+            print("Operación cancelada.")
+            registrar_log("CANCELADO", "Edición de libro cancelada por usuario")
+            return
+
+        id_libro = int(entrada)
+        libro_encontrado = None
+        for libro in libros:
+            if libro[0] == id_libro:
+                libro_encontrado = libro
+                break
+
+        if not libro_encontrado:
+            print("No se encontró el libro con ese ID.")
+            return
+
+        print("\nLibro seleccionado:")
+        mostrar_libros([libro_encontrado])
+
+        print("\nCampos que puede modificar:")
+        print("1 - Título")
+        print("2 - Autor")
+        print("3 - Cantidad")
+        print("4 - Disponibilidad")
+        print("0 - Salir")
+
+        while True:
+            opcion = input("\nSeleccione campo a modificar: ").strip().lower()
+            if opcion in ("0", "salir"):
+                print("Edición finalizada.")
+                registrar_log("CANCELADO", f"Edición libro ID {id_libro} finalizada por usuario")
+                break
+
+            if opcion == "1":
+                nuevo = input("Nuevo título: ").strip()
+                if nuevo in ("0", "salir"):
+                    print("CANCELADO.")
+                    registrar_log("CANCELADO", "Cambio de título cancelado")
+                    break
+                if nuevo in [l[1] for l in libros if l != libro_encontrado]:
+                    print("Ya existe un libro con ese título.")
+                    continue
+                conf = input("¿Confirmar cambio? (s/n): ").lower()
+                if conf != "s":
+                    print("Cambio cancelado.")
+                    continue
+                libro_encontrado[1] = nuevo
+                registrar_log("cambio", f"Libro ID {id_libro} título -> '{nuevo}'")
+                print("Título actualizado.")
+
+            elif opcion == "2":
+                nuevo = input("Nuevo autor: ").strip()
+                if nuevo in ("0", "salir"):
+                    break
+                libro_encontrado[2] = nuevo
+                registrar_log("CAMBIO", f"Libro ID {id_libro} autor -> '{nuevo}'")
+                print("Autor actualizado.")
+
+            elif opcion == "3":
+                nuevo = input("Nueva cantidad: ").strip()
+                if not nuevo.isdigit():
+                    print("Debe ser un número.")
+                    continue
+                libro_encontrado[4] = int(nuevo)
+                libro_encontrado[3] = True if libro_encontrado[4] > 0 else False
+                registrar_log("CAMBIO", f"Libro ID {id_libro} cantidad -> {nuevo}, disponible={libro_encontrado[3]}")
+                print("Cantidad actualizada.")
+
+            elif opcion == "4":
+                nuevo = input("¿Disponible? (si/no): ").strip().lower()
+                libro_encontrado[3] = True if nuevo in ("si", "s") else False
+                registrar_log("CAMBIO", f"Libro ID {id_libro} disponibilidad -> {libro_encontrado[3]}")
+                print("Disponibilidad modificada.")
+
+            else:
+                print("Opción inválida.")
+
+        GUARDAR_libros(ruta_libros, libros)
+        registrar_log("GUARDAR", f"Datos guardados tras edición de libro ID {id_libro}")
+        print("Cambios guardados correctamente.")
+
+    except Exception as e:
+        print("Error al editar libro:", e)
+        registrar_log("ERROR", f"Fallo al editar libro: {e}")
+
 
 def agregar_libro(libros):
     """Agrega un nuevo libro a la matriz de libros."""
@@ -594,10 +706,76 @@ def determinar_fecha_vencimiento(fecha_hoy):
     fecha_vencimiento = fecha_hoy + timedelta(days=dias_a_sumar)
     return fecha_vencimiento.strftime("%d/%m/%Y")
 
+    # -------------------------------------------------------------
+# 🔹 RENOVACIÓN DE PRÉSTAMOS 
+# -------------------------------------------------------------
 def renovacion_prestamos():
+    print("\n--- Renovación de préstamos ---")
 
-    pass
+    if not prestamos:
+        print("No hay préstamos registrados.")
+        return
 
+    hoy = date.today()
+
+    # Bloquear usuarios con mora >15 días
+    for p in prestamos:
+        try:
+            dia, mes, año = map(int, p[3].split("/"))
+            venc = date(año, mes, dia)
+            if (hoy - venc).days > 15 and p[0] in usuarios[0]:
+                idx = usuarios[0].index(p[0])
+                if not usuarios[5][idx]:
+                    usuarios[5][idx] = True
+                    registrar_log("BLOQUEO", f"Usuario {p[0]} bloqueado por mora (+15 días)")
+        except:
+            continue
+
+    for i, p in enumerate(prestamos):
+        print(f"{i}. Usuario: {p[0]} | Libro: {p[1]} | Fecha límite: {p[3]}")
+
+    eleccion = input("\nSeleccione número de préstamo a renovar (0/salir): ").lower()
+    if eleccion in ("0", "salir"):
+        registrar_log("CANCELADO", "Renovación cancelada por usuario")
+        return
+
+    if not eleccion.isdigit() or int(eleccion) >= len(prestamos):
+        print("Selección inválida.")
+        return
+
+    i = int(eleccion)
+    usuario, libro, f_ingreso, f_limite = prestamos[i]
+
+    # Contar renovaciones previas en log
+    renovaciones_previas = 0
+    try:
+        with open("log.txt", "r", encoding="utf-8") as log:
+            for linea in log:
+                if "[RENEW]" in linea and usuario in linea and libro in linea:
+                    renovaciones_previas += 1
+    except:
+        pass
+
+    if renovaciones_previas >= 2:
+        print("Este préstamo ya fue renovado dos veces.")
+        registrar_log("ERROR", f"Intento de renovar +2 veces {usuario}-{libro}")
+        return
+
+    print("\n1 - +7 días\n2 - +15 días\n3 - +30 días")
+    opcion = input("Seleccione: ").strip()
+    dias = 7 if opcion == "1" else 15 if opcion == "2" else 30 if opcion == "3" else None
+    if not dias:
+        print("Opción inválida.")
+        return
+
+    dia, mes, año = map(int, f_limite.split("/"))
+    nueva_fecha = datetime(año, mes, dia) + timedelta(days=dias)
+    prestamos[i][3] = nueva_fecha.strftime("%d/%m/%Y")
+
+    GUARDAR_prestamos(ruta_prestamos, prestamos)
+    registrar_log("RENEW", f"{usuario} renovó '{libro}' +{dias} días (nuevo límite: {prestamos[i][3]})")
+    print(f"Préstamo renovado. Nueva fecha: {prestamos[i][3]}")
+   
 def usuarios_con_mas_prestamos(prestamos):
     "Muestra los usuarios ordenados por la cantidad de préstamos de mayor a menor."
 
@@ -704,7 +882,7 @@ def cargar_libros(ruta):
     return libros
 
 
-def guardar_libros(ruta, libros):
+def GUARDAR_libros(ruta, libros):
     "Guarda la matriz de libros en un archivo de texto."
     try:
         with abrir_archivo_seguro(ruta, "w") as archivo:
@@ -740,7 +918,7 @@ def cargar_usuarios(ruta):
     return usuarios
 
 
-def guardar_usuarios(ruta, usuarios):
+def GUARDAR_usuarios(ruta, usuarios):
     "Guarda los usuarios en un archivo de texto."
     try:
         with abrir_archivo_seguro(ruta, "w") as archivo:
@@ -783,7 +961,7 @@ def cargar_prestamos(ruta):
     return prestamos
 
 
-def guardar_prestamos(ruta, prestamos):
+def GUARDAR_prestamos(ruta, prestamos):
     "Guarda los préstamos en un archivo de texto."
     try:
         with abrir_archivo_seguro(ruta, "w") as archivo:
@@ -972,6 +1150,9 @@ libros = cargar_libros(ruta_libros)
 usuarios = cargar_usuarios(ruta_usuarios)
 prestamos = cargar_prestamos(ruta_prestamos)
 
+registrar_log("INICIO", "Sistema iniciado correctamente.")
+
+
 # --- Diccionario de usuarios (estructura auxiliar para consultas rápidas) ---
 usuarios_dict = {}
 
@@ -1009,7 +1190,44 @@ if prestamos == []:
 
 contrasenia = "admin1234"
 
+# .Backup.)
+
+def hacer_backup():
+    try:
+        archivo_libros = open("libros.txt")
+        lineas_libros = archivo_libros.readlines()
+        archivo_libros.close()
+
+        copia_libros = open("backup/libros_backup.txt", "w")
+        for linea in lineas_libros:
+            copia_libros.write(linea)
+        copia_libros.close()
+
+        archivo_usuarios = open("usuarios.txt")
+        lineas_usuarios = archivo_usuarios.readlines()
+        archivo_usuarios.close()
+
+        copia_usuarios = open("backup/usuarios_backup.txt", "w")
+        for linea in lineas_usuarios:
+            copia_usuarios.write(linea)
+        copia_usuarios.close()
+
+        archivo_prestamos = open("prestamos.txt")
+        lineas_prestamos = archivo_prestamos.readlines()
+        archivo_prestamos.close()
+
+        copia_prestamos = open("backup/prestamos_backup.txt", "w")
+        for linea in lineas_prestamos:
+            copia_prestamos.write(linea)
+        copia_prestamos.close()
+
+        print("✅ Backup automático realizado correctamente (en carpeta 'backup').")
+
+    except:
+        print("⚠ No se pudo realizar el backup automático. Verifique la carpeta 'backup'.")
+
 # --- Bucle principal ---
+
 try:
     while True:
         menu_principal()
@@ -1021,9 +1239,11 @@ except Exception as error:
     print("⚠ Ocurrió un error inesperado:", error)
 
 finally:
+    hacer_backup()
+    registrar_log("SALIDA", "Cierre del sistema y guardado automático.")
     # --- Guardar datos automáticamente al cerrar ---
     print("\n💾 Guardando datos antes de salir...")
-    guardar_libros(ruta_libros, libros)
-    guardar_usuarios(ruta_usuarios, usuarios)
-    guardar_prestamos(ruta_prestamos, prestamos)
+    GUARDAR_libros(ruta_libros, libros)
+    GUARDAR_usuarios(ruta_usuarios, usuarios)
+    GUARDAR_prestamos(ruta_prestamos, prestamos)
     print("✅ Datos guardados correctamente. ¡Hasta luego!")
