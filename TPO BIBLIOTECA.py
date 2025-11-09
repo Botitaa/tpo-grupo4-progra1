@@ -260,6 +260,16 @@ def reporte_stock_bajo(libros):
         if libro[4] < minimo_stock:
             print(f"{libro[1]} (ID: {libro[0]}) - Stock: {libro[4]}")
 
+def exportar_libros_sin_stock(libros):
+    try:
+        with abrir_archivo_seguro("libros_sin_stock.txt", "w") as archivo:
+            for libro in libros:
+                if libro[4] == 0:
+                    archivo.write(f"{libro[0]},{libro[1]},{libro[2]}\n")
+        print("💾Libros sin stock exportados correctamente")
+    except Exception as error:
+        print("⚠ Error al exportar librossin stock:", error)
+
 
 
 # ---- Gestión de usuarios ----
@@ -844,6 +854,23 @@ def morosos(prestamos):
         for i in range(len(nombres)):
             print(f"{nombres[i]} - días de atraso acumulados: {atrasos[i]}")
 
+def exportar_morosos(prestamos):
+    hoy = date.today()
+    try:
+        with abrir_archivo_seguro("morosos.txt", "w") as archivo:
+            for fila in prestamos:
+                partes = fila[3].split("/")
+                dia = int(partes[0])
+                mes = int(partes[1])
+                anio= int(partes[2])
+                fecha_limite = date(anio, mes, dia)
+                dias_atraso = (hoy - fecha_limite).days
+                if dias_atraso > 0:
+                    archivo.write(f"{fila[0]},{fila[1]},{dias_atraso}\n")
+        print("Morosos exportados correctamente")
+    except Exception as error:
+        print("⚠ Error al exportar morosos:", error)
+
 # ---- Carga de Datos ---- Persistencia ---- #
 
 # --- LIBROS ---
@@ -1233,7 +1260,10 @@ finally:
     guardar_libros(ruta_libros, libros)
     guardar_usuarios(ruta_usuarios, usuarios)
     guardar_prestamos(ruta_prestamos, prestamos)
+    exportar_libros_sin_stock(libros)
+    exportar_morosos(prestamos)
     print("✅ Datos guardados correctamente. ¡Hasta luego!")
+
 
 
 
