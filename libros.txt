@@ -48,3 +48,4 @@
 48,El Alquimista,Paulo Coelho,True,14
 49,Siddhartha,Hermann Hesse,True,13
 50,La Insoportable Levedad del Ser,Milan Kundera,True,12
+51,La invención de Morel,Adolfo Bioy Casares,True,0
