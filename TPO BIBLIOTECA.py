@@ -1,7 +1,8 @@
 #SISTEMA GESTION DE BIBLIOTECAS GRUPO 4 VIERNES TARDE
 
 import os
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
+
 
 
 # ---- Utilidades ----
@@ -609,37 +610,49 @@ def listar_prestamos(matriz_prestamos):
         print(f"{fila[0]:<15} | {fila[1]:<25} | {fila[2]:<15} | {fila[3]:<15}")
 
 
-def prestar_libro(libros, usuarios,prestamos):
+def prestar_libro(libros, usuarios, prestamos):
     "Registra un préstamo si hay stock y el usuario existe."
 
     resultados = buscar_libro_parcial(libros)
-
-    # si buscar_libro_parcial devuelve lista vacía
     if not resultados:
         print("No se encontró ningún libro con ese nombre.")
+        registrar_log("ERROR", "Intento de préstamo de libro inexistente")
         return
 
-    # tomar el primer resultado
     libro_prestar = resultados[0]
 
-    usuario_prestar = input("Ingrese el nombre del usuario: ")
+    usuario_prestar = input("Ingrese el nombre del usuario (o 0/salir para cancelar): ").strip()
+    if usuario_prestar.lower() in ("0", "salir"):
+        print("Operación cancelada.")
+        registrar_log("CANCELADO", "Préstamo cancelado por usuario")
+        return
 
     while usuario_prestar not in usuarios[0]:
         print("El usuario no está registrado.")
-        usuario_prestar = input("Ingrese un usuario válido: ")
+        usuario_prestar = input("Ingrese un usuario válido (o 0/salir para cancelar): ").strip()
+        if usuario_prestar.lower() in ("0", "salir"):
+            print("Operación cancelada.")
+            registrar_log("CANCELADO", "Préstamo cancelado por usuario")
+            return
 
-    # verificar cantidad de préstamos activos del usuario
+    indice_usuario = usuarios[0].index(usuario_prestar)
+
+    if usuarios[5][indice_usuario]:
+        print("❌ El usuario está bloqueado y no puede realizar préstamos.")
+        registrar_log("BLOQUEO", f"Intento de préstamo por usuario bloqueado: {usuario_prestar}")
+        return
+
     cantidad_prestamos = sum(1 for p in prestamos if p[0] == usuario_prestar)
     if cantidad_prestamos >= 3:
         print("❌ El usuario superó el máximo de 3 préstamos.")
+        registrar_log("ERROR", f"{usuario_prestar} superó el máximo de préstamos (3)")
         return
 
-    # comprobar stock
     if libro_prestar[4] <= 0:
         print("❌ No hay ejemplares disponibles para préstamo.")
+        registrar_log("ERROR", f"Intento de préstamo sin stock: {libro_prestar[1]}")
         return
 
-    # registrar préstamo
     fecha_ingreso = date.today().strftime("%d/%m/%Y")
     fecha_limite = determinar_fecha_vencimiento(date.today())
 
@@ -647,10 +660,18 @@ def prestar_libro(libros, usuarios,prestamos):
     indice_libro = [libro[1] for libro in libros].index(libro_prestar[1])
     libros[indice_libro][4] -= 1
 
+    libros[indice_libro][3] = True if libros[indice_libro][4] > 0 else False
+
+    guardar_prestamos(ruta_prestamos, prestamos)
+    guardar_libros(ruta_libros, libros)
+
+    registrar_log("PRESTAMO", f"{usuario_prestar} tomó '{libro_prestar[1]}' (vence {fecha_limite})")
+
     print("✅ Préstamo registrado con éxito.")
     print(f"Usuario: {usuario_prestar}")
     print(f"Libro: {libro_prestar[1]}")
     print(f"Fecha límite: {fecha_limite}")
+
 
 def devolver_libro(libros, prestamos):
     "Devuelve un libro prestado y actualiza el stock."
@@ -707,7 +728,7 @@ def determinar_fecha_vencimiento(fecha_hoy):
     fecha_vencimiento = fecha_hoy + timedelta(days=dias_a_sumar)
     return fecha_vencimiento.strftime("%d/%m/%Y")
 
-def renovacion_prestamos():
+def renovacion_prestamos(prestamos, usuarios, ruta_prestamos):
     print("\n--- Renovación de préstamos ---")
 
     if not prestamos:
@@ -716,19 +737,20 @@ def renovacion_prestamos():
 
     hoy = date.today()
 
-    # Bloquear usuarios con mora >15 días
+    # 🔹 Bloquear usuarios con mora >15 días
     for p in prestamos:
         try:
-            dia, mes, año = map(int, p[3].split("/"))
-            venc = date(año, mes, dia)
+            dia, mes, anio = map(int, p[3].split("/"))
+            venc = date(anio, mes, dia)
             if (hoy - venc).days > 15 and p[0] in usuarios[0]:
                 idx = usuarios[0].index(p[0])
                 if not usuarios[5][idx]:
                     usuarios[5][idx] = True
                     registrar_log("BLOQUEO", f"Usuario {p[0]} bloqueado por mora (+15 días)")
-        except:
-            continue
+        except Exception as e:
+            registrar_log("ERROR", f"Error bloqueando usuario por mora: {e}")
 
+    # 🔹 Mostrar préstamos activos
     for i, p in enumerate(prestamos):
         print(f"{i}. Usuario: {p[0]} | Libro: {p[1]} | Fecha límite: {p[3]}")
 
@@ -744,35 +766,46 @@ def renovacion_prestamos():
     i = int(eleccion)
     usuario, libro, f_ingreso, f_limite = prestamos[i]
 
-    # Contar renovaciones previas en log
+    # 🔹 Verificar si está vencido
+    dia, mes, anio = map(int, f_limite.split("/"))
+    fecha_limite = date(anio, mes, dia)
+    if fecha_limite < hoy:
+        print("❌ El préstamo ya está vencido y no puede renovarse.")
+        registrar_log("ERROR", f"Intento de renovar préstamo vencido: {usuario}-{libro}")
+        return
+
+    # 🔹 Contar renovaciones previas
     renovaciones_previas = 0
     try:
-        with open("log.txt", "r", encoding="utf-8") as log:
+        with abrir_archivo_seguro("log.txt", "r") as log:
             for linea in log:
                 if "[RENEW]" in linea and usuario in linea and libro in linea:
                     renovaciones_previas += 1
-    except:
-        pass
+    except Exception as e:
+        registrar_log("ERROR", f"No se pudo leer log.txt: {e}")
 
     if renovaciones_previas >= 2:
         print("Este préstamo ya fue renovado dos veces.")
-        registrar_log("ERROR", f"Intento de renovar +2 veces {usuario}-{libro}")
+        registrar_log("ERROR", f"Intento de renovar +2 veces: {usuario}-{libro}")
         return
 
+    # 🔹 Elegir días de renovación
     print("\n1 - +7 días\n2 - +15 días\n3 - +30 días")
     opcion = input("Seleccione: ").strip()
-    dias = 7 if opcion == "1" else 15 if opcion == "2" else 30 if opcion == "3" else None
+    opciones = {"1": 7, "2": 15, "3": 30}
+    dias = opciones.get(opcion)
+
     if not dias:
         print("Opción inválida.")
         return
 
-    dia, mes, año = map(int, f_limite.split("/"))
-    nueva_fecha = datetime(año, mes, dia) + timedelta(days=dias)
+    nueva_fecha = fecha_limite + timedelta(days=dias)
     prestamos[i][3] = nueva_fecha.strftime("%d/%m/%Y")
 
     guardar_prestamos(ruta_prestamos, prestamos)
     registrar_log("RENEW", f"{usuario} renovó '{libro}' +{dias} días (nuevo límite: {prestamos[i][3]})")
-    print(f"Préstamo renovado. Nueva fecha: {prestamos[i][3]}")
+    print(f"✅ Préstamo renovado. Nueva fecha: {prestamos[i][3]}")
+
    
 def usuarios_con_mas_prestamos(prestamos):
     "Muestra los usuarios ordenados por la cantidad de préstamos de mayor a menor."
@@ -1171,7 +1204,7 @@ def menu_prestamos():
         elif opcion == '4':
             prestamos_vencidos(prestamos)
         elif opcion == '5':
-            renovacion_prestamos()
+            renovacion_prestamos(prestamos, usuarios, ruta_prestamos)
         elif opcion == '6':
             usuarios_con_mas_prestamos(prestamos)
         elif opcion == '7':
@@ -1245,13 +1278,10 @@ contrasenia = "admin1234"
 try:
     while True:
         menu_principal()
-
 except KeyboardInterrupt:
     print("\n⚠ Programa interrumpido manualmente.")
-
 except Exception as error:
     print("⚠ Ocurrió un error inesperado:", error)
-
 finally:
     hacer_backup()
     registrar_log("SALIDA", "Cierre del sistema y guardado automático.")
@@ -1263,7 +1293,3 @@ finally:
     exportar_libros_sin_stock(libros)
     exportar_morosos(prestamos)
     print("✅ Datos guardados correctamente. ¡Hasta luego!")
-
-
-
-
