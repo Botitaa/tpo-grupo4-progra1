@@ -1,0 +1,51 @@
+[2025-11-11 19:56:54] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 19:57:17] [SALIDA] Cierre del sistema y guardado automático.
+[2025-11-11 19:58:14] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:01:19] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:03:31] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:05:30] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:07:59] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:11:21] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:13:32] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:14:22] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:14:35] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:18:17] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:19:06] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:19:25] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:19:38] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:19:50] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:19:59] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:20:09] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:20:32] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:21:54] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:22:30] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:25:45] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:26:09] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:29:29] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:30:58] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:32:01] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:32:29] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:33:01] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:33:27] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:33:45] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:33:53] [BLOQUEO] Usuario Pedro Gómez bloqueado por mora (+15 días)
+[2025-11-11 20:33:53] [BLOQUEO] Usuario María López bloqueado por mora (+15 días)
+[2025-11-11 20:33:53] [BLOQUEO] Usuario Federico Pérez bloqueado por mora (+15 días)
+[2025-11-11 20:37:05] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:37:12] [BLOQUEO] Usuario Pedro Gómez bloqueado por mora (+15 días)
+[2025-11-11 20:37:12] [BLOQUEO] Usuario María López bloqueado por mora (+15 días)
+[2025-11-11 20:37:12] [BLOQUEO] Usuario Federico Pérez bloqueado por mora (+15 días)
+[2025-11-11 20:37:37] [ERROR] Intento de renovar préstamo vencido: Agustín López-Harry Potter y la Piedra Filosofal
+[2025-11-11 20:40:21] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:40:29] [BLOQUEO] Usuario Pedro Gómez bloqueado por mora (+15 días)
+[2025-11-11 20:40:29] [BLOQUEO] Usuario María López bloqueado por mora (+15 días)
+[2025-11-11 20:40:29] [BLOQUEO] Usuario Federico Pérez bloqueado por mora (+15 días)
+[2025-11-11 20:42:24] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:42:28] [BLOQUEO] Usuario Pedro Gómez bloqueado por mora (+15 días)
+[2025-11-11 20:42:28] [BLOQUEO] Usuario María López bloqueado por mora (+15 días)
+[2025-11-11 20:42:28] [BLOQUEO] Usuario Federico Pérez bloqueado por mora (+15 días)
+[2025-11-11 20:42:40] [ERROR] Intento de renovar préstamo vencido: Juan Pérez-El Principito
+[2025-11-11 20:43:56] [RENEW] Carla Gómez renovó 'La invención de Morel' +7 días (nuevo límite: 23/11/2025)
+[2025-11-11 20:46:47] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:47:55] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 20:48:07] [SALIDA] Cierre del sistema y guardado automático.

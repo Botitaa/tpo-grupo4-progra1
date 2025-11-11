@@ -1,31 +1,16 @@
 #SISTEMA GESTION DE BIBLIOTECAS GRUPO 4 VIERNES TARDE
 
 import os
+import time
 from datetime import datetime, date, timedelta
-
-# --- Hora y fecha ---
-from datetime import datetime
 from colorama import Fore, Style, init
-
-init(autoreset=True)
-
-ahora = datetime.now()
-fecha_hora = ahora.strftime("%d/%m/%Y %H:%M:%S")
-
-print(Fore.CYAN + "===========================")
-print(Fore.GREEN + "      MENÚ PRINCIPAL")
-print(Fore.CYAN + "===========================")
-print(Fore.YELLOW + "Fecha y hora actual: " + fecha_hora)
-print(Style.RESET_ALL)
-
-
 
 
 # ---- Utilidades ----
 
 def limpiar_consola():
-    """Limpia la consola; si no funciona, imprime líneas en blanco."""
-    print("\n" * 50) # Alternativa simple
+    "Limpia la consola; si no funciona, imprime líneas en blanco."
+    print("\n" * 50)
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def abrir_archivo_seguro(ruta, modo="r"):
@@ -36,7 +21,7 @@ def abrir_archivo_seguro(ruta, modo="r"):
         return open(ruta, modo, encoding="latin-1")
 
 def registrar_log(evento, detalle):
-    """Registra eventos del sistema en log.txt"""
+    "Registra eventos del sistema en log.txt"
     try:
         tiempo = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
         linea = f"{tiempo} [{evento}] {detalle}\n"
@@ -58,13 +43,31 @@ def matriz_transpuesta(matriz_libros):
     return transpuesta
 
 def mostrar_libros(matriz_libros):
-    print("\n               --- Lista de Libros --- \n ")
-    print("ID | Título              | Autor             | Disponible    | Cantidad")
+    print("\n" + Fore.CYAN + "--- Lista de Libros ---\n" + Style.RESET_ALL)
+
+    # Encabezado
+    print(Fore.YELLOW + f"{'ID':<5}{'Título':<30}{'Autor':<25}{'Disponible':<15}{'Cantidad':<10}")
+    print(Fore.CYAN + "-" * 90 + Style.RESET_ALL)
+
     for fila in matriz_libros:
-        print(f"{fila[0]:<3}| {fila[1]:<20}| {fila[2]:<18}| {fila[3]}            |{fila[4]}")
+        id_libro = fila[0]
+        titulo = str(fila[1])[:28]
+        autor = str(fila[2])[:23]
+        cantidad = fila[4]
+
+        # Color para la disponibilidad
+        if fila[3]:
+            disponible = Fore.GREEN + "Sí" + Style.RESET_ALL
+        else:
+            disponible = Fore.RED + "No" + Style.RESET_ALL
+
+        # Imprimir cada campo con formato fijo
+        print(f"{id_libro:<5}{titulo:<30}{autor:<25}{disponible:<22}  {cantidad:<10}")
+
+    print(Fore.CYAN + "-" * 90 + Style.RESET_ALL)
 
 def buscar_libro_parcial(libros):
-    """Busca y muestra libros por parte del txto del titulo o del autor."""
+    "Busca y muestra libros por parte del txto del titulo o del autor."
 
     print('\n----Busqueda de libros---')    
     print('1. Busqueda por titulo')    
@@ -197,7 +200,7 @@ def editar_libro(libros):
 
 
 def agregar_libro(libros):
-    """Agrega un nuevo libro a la matriz de libros."""
+    "Agrega un nuevo libro a la matriz de libros."
     print('\n--- Agregar Libro ---\n')
     if len(libros)> 0:
         nuevo_id = libros[-1][0] + 1
@@ -272,10 +275,23 @@ def reporte_stock_bajo(libros):
         print(Fore.YELLOW + "⚠ Ingrese un número entero válido.")
         return
 
-    print(f"\n--- Libros con stock menor a {minimo_stock} ---\n")
+    print("\n" + Fore.CYAN + f"--- Libros con stock menor a {minimo_stock} ---\n" + Style.RESET_ALL)
+    print(Fore.YELLOW + f"{'ID':<5}{'Título':<35}{'Autor':<25}{'Stock':<10}" + Style.RESET_ALL)
+    print(Fore.CYAN + "-" * 75 + Style.RESET_ALL)
+
+    encontrados = False
+
     for libro in libros:
         if libro[4] < minimo_stock:
-            print(f"{libro[1]} (ID: {libro[0]}) - Stock: {libro[4]}")
+            encontrados = True
+            color_stock = Fore.RED if libro[4] == 0 else Fore.YELLOW
+            print(f"{libro[0]:<5}{libro[1]:<35}{libro[2]:<25}{color_stock}{libro[4]:<10}{Style.RESET_ALL}")
+
+    if not encontrados:
+        print(Fore.GREEN + "✅ No hay libros con stock menor al mínimo ingresado." + Style.RESET_ALL)
+
+    print(Fore.CYAN + "-" * 75 + Style.RESET_ALL)
+
 
 def exportar_libros_sin_stock(libros):
     try:
@@ -422,28 +438,30 @@ def registrar_usuario(usuarios):
     return usuarios
 
 def mostrar_usuarios(usuarios):
-    print("\n--- Lista de Usuarios ---\n")
+    print("\n" + Fore.CYAN + "--- Lista de Usuarios ---\n" + Style.RESET_ALL)
 
-    # Encabezados con formato tipo tabla
     encabezados = ["Nombre", "DNI", "Teléfono", "Email", "Dirección", "Estado"]
-    print(f"| {encabezados[0]:<12} | {encabezados[1]:<10} | {encabezados[2]:<12} | {encabezados[3]:<30} | {encabezados[4]:<40} | {encabezados[5]:<12} |")
-    print("-" * 136)
+    print(Fore.YELLOW + f"| {encabezados[0]:<15} | {encabezados[1]:<10} | {encabezados[2]:<12} | {encabezados[3]:<30} | {encabezados[4]:<35} | {encabezados[5]:<12} |")
+    print(Fore.CYAN + "-" * 130 + Style.RESET_ALL)
 
-    # Cantidad de usuarios (filas)
     cant_usuarios = len(usuarios[0])
 
-    # Recorrer cada usuario
     for i in range(cant_usuarios):
-        nombre = str(usuarios[0][i])
+        nombre = str(usuarios[0][i])[:15]
         dni = str(usuarios[1][i])
         telefono = str(usuarios[2][i])
-        email = str(usuarios[3][i])
-        direccion = str(usuarios[4][i])
+        email = str(usuarios[3][i])[:30]
+        direccion = str(usuarios[4][i])[:35]
         bloqueado = usuarios[5][i]
 
-        estado = "(Bloqueado)" if bloqueado else "Sin faltas"
+        if bloqueado:
+            estado = Fore.RED + "Bloqueado" + Style.RESET_ALL
+        else:
+            estado = Fore.GREEN + "Sin faltas" + Style.RESET_ALL
 
-        print(f"| {nombre:<12} | {dni:<10} | {telefono:<12} | {email:<30} | {direccion:<40} | {estado:<12} |")
+        print(f"| {nombre:<15} | {dni:<10} | {telefono:<12} | {email:<30} | {direccion:<35} | {estado:<12} |")
+
+    print(Fore.CYAN + "-" * 130 + Style.RESET_ALL)
 
 
 def eliminar_usuario(usuarios):
@@ -618,12 +636,25 @@ def buscar_usuario_por_dni_dicc(diccionario):
 # ---- Gestión de préstamos ----
 
 def listar_prestamos(matriz_prestamos):
-    print("\n--- Lista de Préstamos ---\n")
-    print(f"{'Usuario':<15} | {'Libro':<25} | {'Fecha ingreso':<15} | {'Fecha límite':<15}")
-    print("-" * 80)
+    print("\n" + Fore.CYAN + "--- Lista de Préstamos ---\n" + Style.RESET_ALL)
+
+    print(
+        Fore.YELLOW
+        + f"{'Usuario':<20}{'Libro':<30}{'Fecha ingreso':<20}{'Fecha límite':<20}"
+        + Style.RESET_ALL
+    )
+    print(Fore.CYAN + "-" * 90 + Style.RESET_ALL)
 
     for fila in matriz_prestamos:
-        print(f"{fila[0]:<15} | {fila[1]:<25} | {fila[2]:<15} | {fila[3]:<15}")
+        usuario = str(fila[0])[:18]
+        libro = str(fila[1])[:28]
+        fecha_ingreso = str(fila[2])
+        fecha_limite = str(fila[3])
+
+        print(f"{usuario:<20}{libro:<30}{fecha_ingreso:<20}{fecha_limite:<20}")
+
+    print(Fore.CYAN + "-" * 90 + Style.RESET_ALL)
+
 
 
 def prestar_libro(libros, usuarios, prestamos):
@@ -708,20 +739,33 @@ def devolver_libro(libros, prestamos):
 def prestamos_vencidos(prestamos):
     "Muestra los préstamos que han vencido."
     hoy = date.today()
-    print("\n--- Préstamos Vencidos ---\n")
-    print(f"{'Usuario':<15} | {'Libro':<25} | {'Fecha ingreso':<15} | {'Fecha límite':<15}")
-    print("-" * 80)
+    
+    print("\n" + Fore.CYAN + "--- Préstamos Vencidos ---\n" + Style.RESET_ALL)
+    print(Fore.YELLOW + f"{'Usuario':<18}{'Libro':<45}{'Fecha ingreso':<18}{'Fecha límite':<18}" + Style.RESET_ALL)
+    print(Fore.CYAN + "-" * 95 + Style.RESET_ALL)
+
+    vencidos = False
 
     for fila in prestamos:
-        partes = fila[3].split("/")   # ["27","07","2025"]
-        dia = int(partes[0])
-        mes = int(partes[1])
-        anio = int(partes[2])
-        fecha_limite = date(anio, mes, dia)
+        try:
+            dia, mes, anio = map(int, fila[3].split("/"))
+            fecha_limite = date(anio, mes, dia)
+        except Exception:
+            continue  # salta registros con formato incorrecto
 
         if fecha_limite < hoy:
-            print(f"{fila[0]:<15} | {fila[1]:<25} | {fila[2]:<15} | {fila[3]:<15}")
+            vencidos = True
+            usuario = str(fila[0])[:17]
+            libro = str(fila[1])[:45]
+            fecha_ingreso = str(fila[2])
+            fecha_limite_str = str(fila[3])
 
+            print(Fore.RED + f"{usuario:<18}{libro:<45}{fecha_ingreso:<18}{fecha_limite_str:<18}" + Style.RESET_ALL)
+
+    if not vencidos:
+        print(Fore.GREEN + "✅ No hay préstamos vencidos." + Style.RESET_ALL)
+
+    print(Fore.CYAN + "-" * 95 + Style.RESET_ALL)
 
 def determinar_fecha_vencimiento(fecha_hoy):
     print("1. 7 días")
@@ -744,16 +788,17 @@ def determinar_fecha_vencimiento(fecha_hoy):
     fecha_vencimiento = fecha_hoy + timedelta(days=dias_a_sumar)
     return fecha_vencimiento.strftime("%d/%m/%Y")
 
+
 def renovacion_prestamos(prestamos, usuarios, ruta_prestamos):
-    print("\n--- Renovación de préstamos ---")
+    print("\n" + Fore.CYAN + "--- Renovación de préstamos ---\n" + Style.RESET_ALL)
 
     if not prestamos:
-        print(Fore.RED + "❌No hay préstamos registrados.")
+        print(Fore.RED + "❌ No hay préstamos registrados.")
         return
 
     hoy = date.today()
 
-    # 🔹 Bloquear usuarios con mora >15 días
+    # Bloquear usuarios con mora >15 días
     for p in prestamos:
         try:
             dia, mes, anio = map(int, p[3].split("/"))
@@ -766,23 +811,56 @@ def renovacion_prestamos(prestamos, usuarios, ruta_prestamos):
         except Exception as e:
             registrar_log("ERROR", f"Error bloqueando usuario por mora: {e}")
 
-    # 🔹 Mostrar préstamos activos
-    for i, p in enumerate(prestamos):
-        print(f"{i}. Usuario: {p[0]} | Libro: {p[1]} | Fecha límite: {p[3]}")
+    # Elegir si usar búsqueda parcial o mostrar todos
+    print("\n¿Desea buscar un préstamo específico o listar todos?")
+    print("1 - Buscar por usuario o libro (búsqueda parcial)")
+    print("2 - Mostrar todos los préstamos")
+    print("0 - Cancelar")
 
-    eleccion = input("\nSeleccione número de préstamo a renovar (0/salir): ").lower()
+    opcion_busqueda = input("\nSeleccione una opción: ").strip()
+
+    if opcion_busqueda == "0":
+        print(Fore.RED + "Operación cancelada.")
+        registrar_log("CANCELADO", "Renovación cancelada por usuario")
+        return
+
+    prestamos_filtrados = prestamos.copy()
+
+    if opcion_busqueda == "1":
+        texto = input("Ingrese parte del nombre del usuario o del libro: ").strip().lower()
+        prestamos_filtrados = [
+            p for p in prestamos if texto in p[0].lower() or texto in p[1].lower()
+        ]
+        if not prestamos_filtrados:
+            print(Fore.YELLOW + "⚠ No se encontraron préstamos que coincidan con la búsqueda.")
+            return
+
+    # Mostrar préstamos activos filtrados
+    print("\n" + Fore.YELLOW + f"{'N°':<4}{'Usuario':<20}{'Libro':<45}{'Fecha límite':<15}" + Style.RESET_ALL)
+    print(Fore.CYAN + "-" * 75 + Style.RESET_ALL)
+
+    for i, p in enumerate(prestamos_filtrados):
+        print(f"{i:<4}{p[0]:<20}{p[1]:<45}{p[3]:<15}")
+
+    print(Fore.CYAN + "-" * 75 + Style.RESET_ALL)
+
+    eleccion = input("\nIngrese el número de préstamo a renovar (0/salir): ").strip().lower()
     if eleccion in ("0", "salir"):
         registrar_log("CANCELADO", "Renovación cancelada por usuario")
         return
 
-    if not eleccion.isdigit() or int(eleccion) >= len(prestamos):
-        print(Fore.RED + "❌Selección inválida.")
+    if not eleccion.isdigit() or int(eleccion) >= len(prestamos_filtrados):
+        print(Fore.RED + "❌ Selección inválida.")
         return
 
-    i = int(eleccion)
-    usuario, libro, f_ingreso, f_limite = prestamos[i]
+    # Obtener préstamo seleccionado
+    seleccionado = prestamos_filtrados[int(eleccion)]
+    usuario, libro, f_ingreso, f_limite = seleccionado
 
-    # 🔹 Verificar si está vencido
+    # Buscar índice real en la lista original
+    idx_original = prestamos.index(seleccionado)
+
+    #Verificar si está vencido
     dia, mes, anio = map(int, f_limite.split("/"))
     fecha_limite = date(anio, mes, dia)
     if fecha_limite < hoy:
@@ -790,7 +868,7 @@ def renovacion_prestamos(prestamos, usuarios, ruta_prestamos):
         registrar_log("ERROR", f"Intento de renovar préstamo vencido: {usuario}-{libro}")
         return
 
-    # 🔹 Contar renovaciones previas
+    #Contar renovaciones previas
     renovaciones_previas = 0
     try:
         with abrir_archivo_seguro("log.txt", "r") as log:
@@ -801,34 +879,38 @@ def renovacion_prestamos(prestamos, usuarios, ruta_prestamos):
         registrar_log("ERROR", f"No se pudo leer log.txt: {e}")
 
     if renovaciones_previas >= 2:
-        print(Fore.YELLOW + "Este préstamo ya fue renovado dos veces.")
+        print(Fore.YELLOW + "⚠ Este préstamo ya fue renovado dos veces.")
         registrar_log("ERROR", f"Intento de renovar +2 veces: {usuario}-{libro}")
         return
 
-    # 🔹 Elegir días de renovación
-    print("\n1 - +7 días\n2 - +15 días\n3 - +30 días")
+    #Elegir días de renovación
+    print("\nDuración de renovación:")
+    print("1 - +7 días")
+    print("2 - +15 días")
+    print("3 - +30 días")
+
     opcion = input("Seleccione: ").strip()
     opciones = {"1": 7, "2": 15, "3": 30}
     dias = opciones.get(opcion)
 
     if not dias:
-        print(Fore.RED + "Opción inválida.")
+        print(Fore.RED + "❌ Opción inválida.")
         return
 
+    # Actualizar fecha y guardar
     nueva_fecha = fecha_limite + timedelta(days=dias)
-    prestamos[i][3] = nueva_fecha.strftime("%d/%m/%Y")
+    prestamos[idx_original][3] = nueva_fecha.strftime("%d/%m/%Y")
 
     guardar_prestamos(ruta_prestamos, prestamos)
-    registrar_log("RENEW", f"{usuario} renovó '{libro}' +{dias} días (nuevo límite: {prestamos[i][3]})")
-    print(Fore.GREEN + f"✅ Préstamo renovado. Nueva fecha: {prestamos[i][3]}")
-
+    registrar_log("RENEW", f"{usuario} renovó '{libro}' +{dias} días (nuevo límite: {prestamos[idx_original][3]})")
+    print(Fore.GREEN + f"✅ Préstamo renovado. Nueva fecha: {prestamos[idx_original][3]}")
    
 def usuarios_con_mas_prestamos(prestamos):
-    "Muestra los usuarios ordenados por la cantidad de préstamos de mayor a menor."
-
     print("\n--- Usuarios con más préstamos ---\n")
+
     nombres = []
     cantidades = []
+
     # Contar préstamos por usuario
     for fila in prestamos:
         usuario = fila[0]
@@ -838,15 +920,24 @@ def usuarios_con_mas_prestamos(prestamos):
         else:
             nombres.append(usuario)
             cantidades.append(1)
-    # Ordenar por cantidad de préstamos (descendente)
+
+    # Ordenar por cantidad (descendente)
     for i in range(len(cantidades)):
         for j in range(i + 1, len(cantidades)):
             if cantidades[i] < cantidades[j]:
                 cantidades[i], cantidades[j] = cantidades[j], cantidades[i]
                 nombres[i], nombres[j] = nombres[j], nombres[i]
-    # Mostrar hasta los 10 primeros usuarios con más préstamos
+
+    # Encabezado ordenado y prolijo
+    print(f"{'N°':<4}{'Usuario':<20}{'Cantidad':<10}")
+    print("-" * 34)
+
+    # Mostrar hasta los 10 primeros
     for i in range(min(10, len(nombres))):
-        print(f"{nombres[i]} - préstamos: {cantidades[i]}")
+        print(f"{i+1:<4}{nombres[i]:<20}{cantidades[i]:<10}")
+
+    print("-" * 34)
+
 
 def libros_mas_prestados(prestamos):
     "Muestra los libros ordenados por la cantidad de veces que fueron prestados."
@@ -873,10 +964,12 @@ def libros_mas_prestados(prestamos):
     for i in range(min(10, len(titulos))):
         print(f"{titulos[i]} - Veces prestado: {cantidades[i]}")
 
+
 def morosos(prestamos):
     "Muestra los usuarios morosos con la cantidad de días de atraso acumulados."
 
-    print("\n--- Morosos ---\n")
+    print("\n" + Fore.CYAN + "--- Morosos ---\n" + Style.RESET_ALL)
+
     nombres = []
     atrasos = []
     hoy = date.today()
@@ -890,6 +983,7 @@ def morosos(prestamos):
         anio = int(partes[2])
         fecha_limite = date(anio, mes, dia)
         dias_atraso = (hoy - fecha_limite).days
+
         if dias_atraso > 0:
             if usuario in nombres:
                 posicion = nombres.index(usuario)
@@ -897,11 +991,16 @@ def morosos(prestamos):
             else:
                 nombres.append(usuario)
                 atrasos.append(dias_atraso)
+
     if len(nombres) == 0:
-        print(Fore.GREEN + "No hay morosos.")
+        print(Fore.GREEN + "✅ No hay morosos." + Style.RESET_ALL)
     else:
+        print(Fore.YELLOW + f"{'Usuario':<20}{'Días de atraso':<15}" + Style.RESET_ALL)
+        print(Fore.CYAN + "-" * 35 + Style.RESET_ALL)
         for i in range(len(nombres)):
-            print(Fore.YELLOW + f"{nombres[i]} - días de atraso acumulados: {atrasos[i]}")
+            print(f"{nombres[i]:<20}{atrasos[i]:<15}")
+        print(Fore.CYAN + "-" * 35 + Style.RESET_ALL)
+
 
 def exportar_morosos(prestamos):
     hoy = date.today()
@@ -1077,6 +1176,16 @@ def hacer_backup():
 
 def menu_principal():
 
+    init(autoreset=True)
+
+    ahora = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+
+    print(Fore.CYAN + "=" * 35)
+    print(Fore.GREEN + "        📚 MENÚ PRINCIPAL        ")
+    print(Fore.CYAN + "=" * 35)
+    print(Fore.YELLOW + f"🕒 Fecha y hora actual: {ahora}")
+    print(Style.RESET_ALL)
+
     print("\n--- Biblioteca ---")
     print("1. Gestión de Libros")
     print("2. Gestión de Usuarios")
@@ -1251,6 +1360,9 @@ prestamos = cargar_prestamos(ruta_prestamos)
 
 registrar_log("INICIO", "Sistema iniciado correctamente.")
 
+#para que espere antes de iniciar
+time.sleep(1)
+limpiar_consola()
 
 # --- Diccionario de usuarios (estructura auxiliar para consultas rápidas) ---
 usuarios_dict = {}
