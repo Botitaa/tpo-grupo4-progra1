@@ -900,7 +900,7 @@ def exportar_morosos(prestamos):
                 dias_atraso = (hoy - fecha_limite).days
                 if dias_atraso > 0:
                     archivo.write(f"{fila[0]},{fila[1]},{dias_atraso}\n")
-        print("Morosos exportados correctamente")
+        print("💾Morosos exportados correctamente")
     except Exception as error:
         print("⚠ Error al exportar morosos:", error)
 
