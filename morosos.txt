@@ -1,50 +1,50 @@
-Carla Romero,La Metamorfosis,15
-Agustín López,Harry Potter y la Piedra Filosofal,39
-Carla Romero,Madame Bovary,29
-Juan Pérez,El Hobbit,25
-Pedro Gómez,Moby Dick,39
-Carla Romero,Harry Potter y la Piedra Filosofal,17
-Agustín López,El Principito,42
-Juan Pérez,Crónica de una Muerte Anunciada,15
-María López,El Señor de los Anillos,35
-Federico Pérez,El Coronel no tiene quien le escriba,17
-Laura Torres,Ensayo sobre la Ceguera,38
-Carla Romero,Fahrenheit 451,30
-Sofía Sánchez,Crónica de una Muerte Anunciada,31
-Sofía Sánchez,La Casa de los Espíritus,22
-Pedro Gómez,Harry Potter y la Piedra Filosofal,39
-Martín Gutiérrez,Rayuela,13
-Juan Pérez,El Túnel,37
-Pedro Gómez,Cumbres Borrascosas,41
-Laura Torres,El Retrato de Dorian Gray,31
-Pedro Gómez,Pedro Páramo,33
-María López,Crónica de una Muerte Anunciada,29
-Laura Torres,Bajo la Misma Estrella,21
-Federico Pérez,El Viejo y el Mar,17
-Agustín López,La Metamorfosis,26
-Juan Pérez,Pedro Páramo,38
-Federico Pérez,Antígona,14
-Juan Pérez,Harry Potter y la Piedra Filosofal,32
-Martín Gutiérrez,El Viejo y el Mar,19
+Carla Romero,La Metamorfosis,16
+Agustín López,Harry Potter y la Piedra Filosofal,40
+Carla Romero,Madame Bovary,30
+Juan Pérez,El Hobbit,26
+Pedro Gómez,Moby Dick,40
+Carla Romero,Harry Potter y la Piedra Filosofal,18
+Agustín López,El Principito,43
+Juan Pérez,Crónica de una Muerte Anunciada,16
+María López,El Señor de los Anillos,36
+Federico Pérez,El Coronel no tiene quien le escriba,18
+Laura Torres,Ensayo sobre la Ceguera,39
+Carla Romero,Fahrenheit 451,31
+Sofía Sánchez,Crónica de una Muerte Anunciada,32
+Sofía Sánchez,La Casa de los Espíritus,23
+Pedro Gómez,Harry Potter y la Piedra Filosofal,40
+Martín Gutiérrez,Rayuela,14
+Juan Pérez,El Túnel,38
+Pedro Gómez,Cumbres Borrascosas,42
+Laura Torres,El Retrato de Dorian Gray,32
+Pedro Gómez,Pedro Páramo,34
 María López,Crónica de una Muerte Anunciada,30
-Sofía Sánchez,El Principito,14
-Laura Torres,Orgullo y Prejuicio,33
-María López,Las Aventuras de Tom Sawyer,34
-Lucía Fernández,Fahrenheit 451,32
-María López,Cumbres Borrascosas,21
-Sofía Sánchez,Frankenstein,22
-Juan Pérez,El Principito,35
-Laura Torres,El Amor en los Tiempos del Cólera,39
-Sofía Sánchez,El Coronel no tiene quien le escriba,14
-Agustín López,Martín Fierro,30
-Martín Gutiérrez,El Retrato de Dorian Gray,41
-Carla Romero,Crónica de una Muerte Anunciada,20
-Federico Pérez,Las Aventuras de Tom Sawyer,18
-Laura Torres,El Coronel no tiene quien le escriba,19
-Pedro Gómez,Moby Dick,23
-Lucía Fernández,Frankenstein,34
-Carla Romero,El Coronel no tiene quien le escriba,13
-Juan Pérez,Siddhartha,38
-Juan Pérez,El Nombre de la Rosa,33
-Agustín López,Martín Fierro,16
-agustin botana,El Amor en los Tiempos del Cólera,6
+Laura Torres,Bajo la Misma Estrella,22
+Federico Pérez,El Viejo y el Mar,18
+Agustín López,La Metamorfosis,27
+Juan Pérez,Pedro Páramo,39
+Federico Pérez,Antígona,15
+Juan Pérez,Harry Potter y la Piedra Filosofal,33
+Martín Gutiérrez,El Viejo y el Mar,20
+María López,Crónica de una Muerte Anunciada,31
+Sofía Sánchez,El Principito,15
+Laura Torres,Orgullo y Prejuicio,34
+María López,Las Aventuras de Tom Sawyer,35
+Lucía Fernández,Fahrenheit 451,33
+María López,Cumbres Borrascosas,22
+Sofía Sánchez,Frankenstein,23
+Juan Pérez,El Principito,36
+Laura Torres,El Amor en los Tiempos del Cólera,40
+Sofía Sánchez,El Coronel no tiene quien le escriba,15
+Agustín López,Martín Fierro,31
+Martín Gutiérrez,El Retrato de Dorian Gray,42
+Carla Romero,Crónica de una Muerte Anunciada,21
+Federico Pérez,Las Aventuras de Tom Sawyer,19
+Laura Torres,El Coronel no tiene quien le escriba,20
+Pedro Gómez,Moby Dick,24
+Lucía Fernández,Frankenstein,35
+Carla Romero,El Coronel no tiene quien le escriba,14
+Juan Pérez,Siddhartha,39
+Juan Pérez,El Nombre de la Rosa,34
+Agustín López,Martín Fierro,17
+agustin botana,El Amor en los Tiempos del Cólera,7

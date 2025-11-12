@@ -54,3 +54,10 @@
 [2025-11-11 22:11:23] [SALIDA] Cierre del sistema y guardado automático.
 [2025-11-12 00:09:05] [INICIO] Sistema iniciado correctamente.
 [2025-11-12 00:09:24] [ELIMINACION] Libro 'El Quijote' eliminado y IDs reordenados.
+[2025-11-12 00:11:58] [INICIO] Sistema iniciado correctamente.
+[2025-11-12 00:12:01] [BACKUP] Carpeta 'backup' creada automáticamente.
+[2025-11-12 00:12:01] [BACKUP] Backup automático completado correctamente.
+[2025-11-12 00:12:01] [SALIDA] Cierre del sistema y guardado automático.
+[2025-11-12 00:12:10] [INICIO] Sistema iniciado correctamente.
+[2025-11-12 00:14:44] [BACKUP] Backup automático completado correctamente.
+[2025-11-12 00:14:44] [SALIDA] Cierre del sistema y guardado automático.
