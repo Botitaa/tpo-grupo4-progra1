@@ -31,16 +31,95 @@ def registrar_log(evento, detalle):
     except Exception as e:
         print(f"Error al registrar en log: {e}")
 
+def cambiar_contrasenia():
+    "Permite cambiar la contraseña del administrador."
+
+    global contrasenia
+
+    intento = input("Ingrese la contraseña actual: ").strip()
+    if intento != contrasenia:
+        print(Fore.RED + "❌ Contraseña incorrecta.")
+        return
+
+    nueva = input("Ingrese la nueva contraseña: ").strip()
+    confirmar = input("Confirme la nueva contraseña: ").strip()
+
+    if nueva != confirmar:
+        print(Fore.RED + "❌ Las contraseñas no coinciden.")
+        return
+
+    if len(nueva) < 4:
+        print(Fore.YELLOW + "⚠ La contraseña debe tener al menos 4 caracteres.")
+        return
+
+    contrasenia = nueva
+
+    try:
+        with abrir_archivo_seguro("admin_pass.txt", "w") as archivo:
+            archivo.write(contrasenia)
+        print(Fore.GREEN + "✅ Contraseña cambiada y guardada correctamente.")
+        registrar_log("CAMBIO DE CONTRASEÑA", "exitoso")
+    except Exception as e:
+        print(Fore.RED + f"⚠ Error al guardar la nueva contraseña: {e}")
+
+def hacer_backup():
+    "Crea copias de seguridad de los archivos importantes y registra el evento."
+    try:
+        # Crear carpeta backup si no existe
+        if not os.path.exists("backup"):
+            os.makedirs("backup")
+            registrar_log("BACKUP", "Carpeta 'backup' creada automáticamente.")
+
+        # --- Copia de LIBROS ---
+        with abrir_archivo_seguro("libros.txt", "r") as origen:
+            lineas = origen.readlines()
+        with abrir_archivo_seguro("backup/libros_backup.txt", "w") as destino:
+            destino.writelines(lineas)
+
+        # --- Copia de USUARIOS ---
+        with abrir_archivo_seguro("usuarios.txt", "r") as origen:
+            lineas = origen.readlines()
+        with abrir_archivo_seguro("backup/usuarios_backup.txt", "w") as destino:
+            destino.writelines(lineas)
+
+        # --- Copia de PRÉSTAMOS ---
+        with abrir_archivo_seguro("prestamos.txt", "r") as origen:
+            lineas = origen.readlines()
+        with abrir_archivo_seguro("backup/prestamos_backup.txt", "w") as destino:
+            destino.writelines(lineas)
+
+        print(Fore.GREEN + "✅ Backup automático realizado correctamente (en carpeta 'backup').")
+        registrar_log("BACKUP", "Backup automático completado correctamente.")
+
+    except FileNotFoundError as e:
+        mensaje = f"No se encontró uno de los archivos originales: {e.filename}"
+        print(Fore.YELLOW + f"⚠ {mensaje}")
+        registrar_log("BACKUP_ERROR", mensaje)
+
+    except Exception as e:
+        mensaje = f"Error al realizar el backup: {e}"
+        print(Fore.RED + f"⚠ {mensaje}")
+        registrar_log("BACKUP_ERROR", mensaje)
+
+def ver_logs():
+    "Muestra los últimos registros del archivo log.txt"
+    ruta = "log.txt"
+    if not os.path.exists(ruta):
+        print(Fore.YELLOW + "⚠ No hay registros disponibles.")
+        return
+
+    print(Fore.CYAN + "\n📄 Últimos registros del sistema:\n" + Style.RESET_ALL)
+    try:
+        with abrir_archivo_seguro(ruta, "r") as archivo:
+            lineas = archivo.readlines()[-30:]
+            for linea in lineas:
+                print(linea.strip())
+    except Exception as e:
+        print(Fore.RED + f"⚠ Error al leer logs: {e}")
+
 
 # ---- Gestión de libros ----
-def matriz_transpuesta(matriz_libros):
-    transpuesta = []
-    for i in range(len(matriz_libros[0])):
-        fila_transpuesta = []
-        for j in range(len(matriz_libros)):
-            fila_transpuesta.append(matriz_libros[j][i])
-        transpuesta.append(fila_transpuesta)
-    return transpuesta
+
 
 def mostrar_libros(matriz_libros):
     print("\n" + Fore.CYAN + "--- Lista de Libros ---\n" + Style.RESET_ALL)
@@ -74,16 +153,22 @@ def buscar_libro_parcial(libros):
     print('2. Busqueda por autor')    
     print('0. Volver')
 
-    opcion = input('\nSeleccione una opcion por favor: ').strip()
+    opcion = input('\nSeleccione una opcion: ').strip()
 
     if opcion == '0':
         print('Volviendo...')
-        return
+        return 
     elif opcion == '1':
-        busqueda = input("Ingrese el título del libro a buscar: ").strip().lower()  # ingreso por teclado en minúsculas
+        busqueda = input("Ingrese el título del libro a buscar (0 para volver): ").strip().lower()  # ingreso por teclado en minúsculas
+        if busqueda == '0':
+            print('Volviendo...')
+            return 
         columna = 1
     elif opcion == '2':
-        busqueda = input("Ingrese el autor del libro a buscar: ").strip().lower()  # ingreso por teclado en minúsculas
+        busqueda = input("Ingrese el autor del libro a buscar (0 para volver): ").strip().lower()  # ingreso por teclado en minúsculas
+        if busqueda == '0':
+            print('Volviendo...')
+            return 
         columna = 2
     else:
         print(Fore.RED + 'Opcion invalida.')
@@ -96,7 +181,7 @@ def buscar_libro_parcial(libros):
             
     if len(encontrados) == 0:
         print(Fore.RED + 'No se encontro ningun libro con ese texto')
-        return []
+        return 
     
     limpiar_consola()
     
@@ -207,9 +292,14 @@ def agregar_libro(libros):
     else:
         nuevo_id = 1
         
-    titulo = input('Ingrese el titulo del libro por favor: ').strip()
-    autor = input('Ingrese el autor por favor: ').strip()
-    
+    titulo = input('Ingrese el titulo del libro (0 para volver): ').strip()
+    if titulo == '0':
+        print('Volviendo...')
+        return 
+    autor = input('Ingrese el autor (0 para volve): ').strip()
+    if autor == '0':
+        print('Volviendo...')
+        return
     duplicado = False
 
     for fila in libros:
@@ -223,6 +313,9 @@ def agregar_libro(libros):
 
     while cantidad < 0:
         cantidad_str = input('Ingrese la cantidad en stock: ')
+        if cantidad_str == '0':
+            print('Volviendo...')
+            return 
         if cantidad_str.isdigit():
             cantidad = int(cantidad_str)
             if cantidad<0:
@@ -236,41 +329,58 @@ def agregar_libro(libros):
         disponibilidad = False
         
     libros.append([nuevo_id,titulo,autor,disponibilidad,cantidad])
+    registrar_log("AGREGADO", f"titulo: {titulo}, autor: '{autor}', cantidad en stock {cantidad}")
     print(f'Libro "{titulo}" agregado con exito.')
 
 def eliminar_libro(libros):
-    "Elimina un libro de la matriz de libros por ID."
-
     print("\n--- Eliminar Libro ---\n")
     mostrar_libros(libros)
-    criterio = input("\nIngrese el ID del libro a eliminar: ").strip()
-    
+
+    criterio = input("\nIngrese el ID del libro a eliminar (0 para volver): ").strip()
+    if criterio == '0':
+        print('Volviendo...')
+        return
+
+    if not criterio.isdigit():
+        print(Fore.YELLOW + 'Ingrese un ID numérico válido')
+        return
+
+    criterio_num = int(criterio)
     eliminado = False
-    
-    if criterio.isdigit():
-        criterio_num = int(criterio)
-        for fila in libros:
-            if fila[0] == criterio_num:
-                mostrar_libros([fila])
-                confirmacion = input( '\nEsta seguro que quiere eliminar este libro? (S/N): ').lower().strip()
-                if confirmacion == 's':
-                    titulo_eliminado = fila[1]
-                    libros.remove(fila)
-                    print(Fore.GREEN + f"\nLibro: {titulo_eliminado}  (ID: {criterio_num}) eliminado con éxito.")
-                    eliminado = True
-                else:#queda vacante el ID 
-                    print(Fore.RED + '\nOperacion cancelada, no se elimino el libro.')
-                break    
+
+    for fila in libros:
+        if fila[0] == criterio_num:
+            mostrar_libros([fila])
+            confirmacion = input('\n¿Está seguro que quiere eliminar este libro? (S/N): ').lower().strip()
+            if confirmacion == 's':
+                titulo_eliminado = fila[1]
+                libros.remove(fila)
+
+                reordenar_ids(libros)
+                guardar_libros(ruta_libros, libros)
+
+                print(Fore.GREEN + f"\nLibro: {titulo_eliminado} (ID: {criterio_num}) eliminado con éxito.")
+                registrar_log("ELIMINACION", f"Libro '{titulo_eliminado}' eliminado y IDs reordenados.")
+                eliminado = True
             else:
-                print(Fore.YELLOW + 'Ingrese un ID valido por favor')
-                
-    if eliminado == False:
+                print(Fore.RED + '\nOperación cancelada, no se eliminó el libro.')
+            break
+
+    if not eliminado:
         print(Fore.RED + "No se encontró el libro.")
 
+def reordenar_ids(libros, i=0):
+    "Reasigna los IDs de los libros de forma recursiva desde 1."
+    if i >= len(libros):
+        return
+    libros[i][0] = i + 1
+    reordenar_ids(libros, i + 1)
+    
 def reporte_stock_bajo(libros):
     "Muestra un reporte de libros cuyo stock es menor a un umbral ingresado por el usuario."
-    try:
-        minimo_stock = int(input("Ingrese el mínimo de stock: "))
+    print("\n--- Reporte de stock bajo ---")
+    try:    
+        minimo_stock = input(int("Ingrese el mínimo de stock: "))
     except ValueError:
         print(Fore.YELLOW + "⚠ Ingrese un número entero válido.")
         return
@@ -318,8 +428,10 @@ def registrar_usuario(usuarios):
     # ------- Nombre -------
     validado = False
     while not validado:
-        nombre = input("Ingrese nombre del usuario: ")
-
+        nombre = input("Ingrese nombre del usuario (0 para volver): ")
+        if nombre == '0':
+            print('Volviendo...')
+            return 
         if not nombre.strip():
             print(Fore.YELLOW + "El nombre no puede estar vacío. Intente nuevamente.")
             continue
@@ -342,6 +454,9 @@ def registrar_usuario(usuarios):
     dnis_existentes = set(map(str, usuarios[1]))
     while not validado:
         documento = input("Ingrese el DNI del usuario: ")
+        if documento == '0':
+            print('Volviendo...')
+            return
 
         if not documento.strip():
             print(Fore.YELLOW + "El documento no puede estar vacío.")
@@ -365,7 +480,9 @@ def registrar_usuario(usuarios):
     tels_existentes = set(map(str, usuarios[2]))
     while not validado:
         telefono = input("Ingrese el teléfono (10 dígitos, debe iniciar con 11): ")
-
+        if telefono == '0':
+            print('Volviendo...')
+            return 
         if not telefono.strip():
             print(Fore.YELLOW + "El teléfono no puede estar vacío.")
             continue
@@ -390,8 +507,10 @@ def registrar_usuario(usuarios):
     validado = False
     emails_existentes = set(e.lower() for e in usuarios[3])
     while not validado:
-        email = input("Ingrese el email: ").strip().lower()
-
+        email = input("Ingrese el email (0 para volver): ").strip().lower()
+        if email == '0':
+            print('Volviendo...')
+            return []
         if not email:
             print(Fore.YELLOW + "El email no puede estar vacío.")
             continue
@@ -413,7 +532,9 @@ def registrar_usuario(usuarios):
     validado = False
     while not validado:
         direccion = input("Ingrese la dirección: ").strip()
-
+        if direccion == '0':
+            print('Volviendo...')
+            return
         if not direccion:
             print(Fore.YELLOW + "La dirección no puede estar vacía.")
             continue
@@ -435,6 +556,7 @@ def registrar_usuario(usuarios):
     usuarios[5].append(False)
 
     print(Fore.GREEN + f"\n✅ {nombre} (DNI {documento}) registrado con éxito.\n")
+    registrar_log("USUARIO", f"{nombre} (DNI {documento}) registrado con éxito.'")
     return usuarios
 
 def mostrar_usuarios(usuarios):
@@ -467,11 +589,15 @@ def mostrar_usuarios(usuarios):
 def eliminar_usuario(usuarios):
     "Eliminar un usuario "
 
-    intento = input("Ingrese la contraseña de administrador para confirmar: ")
-
+    intento = input("Ingrese la contraseña de administrador para confirmar (0 para volver): ")
+    if intento == '0':
+        print('Volviendo...')
+        return []
     if intento != contrasenia:
         print("Contraseña incorrecta. Operación cancelada.")
         return
+
+    mostrar_usuarios(usuarios)
 
     dni = input("Ingrese el DNI del usuario a eliminar: ").strip()
 
@@ -492,12 +618,15 @@ def eliminar_usuario(usuarios):
                 u.pop(indice)
 
     print(Fore.GREEN + f"Usuario con DNI {dni} eliminado con éxito.")
+    registrar_log("USUARIO", f"Usuario con DNI {dni} eliminado con éxito.")
 
 def editar_usuario(usuarios):
     "Permite modificar el nombre de un usuario."
     
-    intento = input("Ingrese la contraseña de administrador para confirmar: ")
-
+    intento = input("Ingrese la contraseña de administrador para confirmar (0 para volver): ")
+    if intento == '0':
+        print('Volviendo...')
+        return 
     if intento != contrasenia:
         print(Fore.RED + "Contraseña incorrecta. Operación cancelada.")
         return
@@ -538,7 +667,10 @@ def editar_usuario(usuarios):
             return
         elif opcion == 1:
             #editar nombre
-            nuevo_nombre = input("Ingrese el nuevo nombre del usuario: ")
+            nuevo_nombre = input("Ingrese el nuevo nombre del usuario (0 para volver): ")
+            if nuevo_nombre == '0':
+                print('Volviendo...')
+                return
         
             if nuevo_nombre in usuarios[0]:
                 print(Fore.YELLOW + "El usuario ya existe. Intente con otro nombre.")
@@ -553,10 +685,13 @@ def editar_usuario(usuarios):
                 usuarios[0][indice] = nuevo_nombre
                 print(Fore.GREEN + "Usuario editado con éxito.")
                 print(Fore.GREEN + nombre_viejo, "cambió a:", nuevo_nombre)
+                registrar_log("USUARIO", f"{nombre_viejo}, cambió a:, {nuevo_nombre}")
         elif opcion == 2:
             #editar dni
-            nuevo_dni = input("Ingrese el nuevo DNI del usuario: ")
-
+            nuevo_dni = input("Ingrese el nuevo DNI del usuario (0 para volver): ")
+            if nuevo_dni == '0':
+                print('Volviendo...')
+                return 
             if not nuevo_dni.strip():
                 print(Fore.YELLOW + "El documento no puede estar vacío.")
             elif not nuevo_dni.isdigit():
@@ -568,9 +703,13 @@ def editar_usuario(usuarios):
             else:
                 usuarios[1][indice] = int(nuevo_dni)
                 print(Fore.GREEN + "DNI editado con éxito.")
+                registrar_log("USUARIO", f"DNI:{usuarios}cambió a: {nuevo_dni}")
         elif opcion == 3:
             #editar telefono
-            nuevo_telefono = input("Ingrese el nuevo teléfono (10 dígitos, debe iniciar con 11): ")
+            nuevo_telefono = input("Ingrese el nuevo teléfono (10 dígitos, debe iniciar con 11) o '0' para volver: ")
+            if nuevo_telefono == '0':
+                print('Volviendo...')
+                return
 
             if not nuevo_telefono.strip():
                 print(Fore.YELLOW + "El teléfono no puede estar vacío.")
@@ -585,10 +724,14 @@ def editar_usuario(usuarios):
             else:
                 usuarios[2][indice] = int(nuevo_telefono)
                 print(Fore.GREEN + "Teléfono editado con éxito.")
+                registrar_log("USUARIO", f"{dni_str}, cambió a:, {nuevo_telefono}")
         elif opcion == 4:
             #editar email
-            nuevo_email = input("Ingrese el nuevo email: ").strip().lower()
-
+            nuevo_email = input("Ingrese el nuevo email (0 para volver): ").strip().lower()
+            if nuevo_email == '0':
+                print('Volviendo...')
+                return 
+            
             if not nuevo_email:
                 print(Fore.YELLOW + "El email no puede estar vacío.")
             elif "@" not in nuevo_email:
@@ -596,6 +739,7 @@ def editar_usuario(usuarios):
             else:
                 usuarios[3][indice] = nuevo_email
                 print(Fore.YELLOW + "Email editado con éxito.")
+                registrar_log("USUARIO", f"{dni_str}, cambió a:, {nuevo_email}")
         elif opcion == 5:
             #direccion
             nueva_direccion = input("Ingrese la nueva dirección: ").strip()
@@ -605,11 +749,13 @@ def editar_usuario(usuarios):
             else:
                     usuarios[4][indice] = nueva_direccion
                     print(Fore.GREEN + "Dirección editada con éxito.")
+                    registrar_log("USUARIO", f"{dni_str}, cambió a:, {nueva_direccion}")
         elif opcion == 6:
             #estado
             usuarios[5][indice] = not usuarios[5][indice]
             estado = "bloqueado" if usuarios[5][indice] else "desbloqueado"
             print(Fore.GREEN + f"Usuario {estado} con éxito.")
+            registrar_log("USUARIO", f"{dni_str}, cambió a:, {estado}")
         else:
             print(Fore.YELLOW + "Elija una opcion correcta: ")
 
@@ -630,8 +776,6 @@ def buscar_usuario_por_dni_dicc(diccionario):
             print(Fore.RED + "No se encontró un usuario con ese DNI.")
     except ValueError:
         print(Fore.YELLOW + "DNI inválido. Ingrese solo números.")
-
-
 
 # ---- Gestión de préstamos ----
 
@@ -723,14 +867,22 @@ def prestar_libro(libros, usuarios, prestamos):
 def devolver_libro(libros, prestamos):
     "Devuelve un libro prestado y actualiza el stock."
     
-    usuario_devolver = input("Ingrese el nombre del usuario que devuelve el libro: ")
+    usuario_devolver = input("Ingrese el nombre del usuario que devuelve el libro (0 para volver): ")
+    if usuario_devolver == '0':
+        print('Volviendo...')
+        return
     libro_devolver = input("Ingrese el título del libro a devolver: ")
-
+    if libro_devolver == '0':
+        print('Volviendo...')
+        return
     for prestamo in prestamos:
         if prestamo[0] == usuario_devolver and prestamo[1] == libro_devolver:
             prestamos.remove(prestamo)
             libros[[libro[1] for libro in libros].index(libro_devolver)][4] += 1
             print(Fore.GREEN + "✅Libro devuelto con éxito.")
+            registrar_log("PRESTAMO", f"{usuario_devolver} devolvió '{libro_devolver}'")
+            guardar_prestamos(ruta_prestamos, prestamos)
+            guardar_libros(ruta_libros, libros)
             return
 
     print(Fore.RED + "❌No se encontró un préstamo para este usuario y libro.")
@@ -751,8 +903,8 @@ def prestamos_vencidos(prestamos):
             dia, mes, anio = map(int, fila[3].split("/"))
             fecha_limite = date(anio, mes, dia)
         except Exception:
-            continue  # salta registros con formato incorrecto
-
+            continue 
+        
         if fecha_limite < hoy:
             vencidos = True
             usuario = str(fila[0])[:17]
@@ -761,6 +913,7 @@ def prestamos_vencidos(prestamos):
             fecha_limite_str = str(fila[3])
 
             print(Fore.RED + f"{usuario:<18}{libro:<45}{fecha_ingreso:<18}{fecha_limite_str:<18}" + Style.RESET_ALL)
+            registrar_log("VENCIMIENTO", f"{usuario:<18}{libro:<45}{fecha_ingreso:<18}{fecha_limite_str:<18}")
 
     if not vencidos:
         print(Fore.GREEN + "✅ No hay préstamos vencidos." + Style.RESET_ALL)
@@ -772,7 +925,10 @@ def determinar_fecha_vencimiento(fecha_hoy):
     print("2. 15 días")
     print("3. 30 días")
 
-    opcion = input("Seleccione una opcion para el plazo de devolución (1,2,3): ")
+    opcion = input("Seleccione una opcion para el plazo de devolución (1,2,3) o '0' para volver: ")
+    if opcion == '0':
+        print('Volviendo...')
+        return
 
     dias_a_sumar = 0
     if opcion == '1':
@@ -827,7 +983,10 @@ def renovacion_prestamos(prestamos, usuarios, ruta_prestamos):
     prestamos_filtrados = prestamos.copy()
 
     if opcion_busqueda == "1":
-        texto = input("Ingrese parte del nombre del usuario o del libro: ").strip().lower()
+        texto = input("Ingrese parte del nombre del usuario o del libro (0 para volver): ").strip().lower()
+        if texto == '0':
+            print('Volviendo...')
+            return
         prestamos_filtrados = [
             p for p in prestamos if texto in p[0].lower() or texto in p[1].lower()
         ]
@@ -1135,43 +1294,6 @@ def guardar_prestamos(ruta, prestamos):
     except Exception as error:
         print(Fore.RED + "⚠ Error al guardar los préstamos:", error)
 
-# ---- Gestión de backup ----
-
-def hacer_backup():
-    try:
-        archivo_libros = open("libros.txt")
-        lineas_libros = archivo_libros.readlines()
-        archivo_libros.close()
-
-        copia_libros = open("backup/libros_backup.txt", "w")
-        for linea in lineas_libros:
-            copia_libros.write(linea)
-        copia_libros.close()
-
-        archivo_usuarios = open("usuarios.txt")
-        lineas_usuarios = archivo_usuarios.readlines()
-        archivo_usuarios.close()
-
-        copia_usuarios = open("backup/usuarios_backup.txt", "w")
-        for linea in lineas_usuarios:
-            copia_usuarios.write(linea)
-        copia_usuarios.close()
-
-        archivo_prestamos = open("prestamos.txt")
-        lineas_prestamos = archivo_prestamos.readlines()
-        archivo_prestamos.close()
-
-        copia_prestamos = open("backup/prestamos_backup.txt", "w")
-        for linea in lineas_prestamos:
-            copia_prestamos.write(linea)
-        copia_prestamos.close()
-
-        print(Fore.GREEN + "✅ Backup automático realizado correctamente (en carpeta 'backup').")
-
-    except:
-        print(Fore.RED + "⚠ No se pudo realizar el backup automático. Verifique la carpeta 'backup'.")
-
-
 # ---- Gestión de menues ----
 
 def menu_principal():
@@ -1190,6 +1312,7 @@ def menu_principal():
     print("1. Gestión de Libros")
     print("2. Gestión de Usuarios")
     print("3. Gestión de Préstamos")
+    print("4. Gestion de Admin")
     print("0. Salir")
 
     try:
@@ -1207,6 +1330,8 @@ def menu_principal():
             menu_usuarios()
         elif opcion == '3':
             menu_prestamos()
+        elif opcion == '4':
+            menu_admin()
         elif opcion == '0':
             print(Fore.YELLOW + "Saliendo del sistema...")
             quit()
@@ -1343,6 +1468,32 @@ def menu_prestamos():
     except Exception as error:
         print(Fore.RED + "⚠ Se produjo un error al ejecutar la opción seleccionada:", error)
 
+def menu_admin():
+    "Menú del administrador: ver logs o cambiar contraseña"
+
+    print(Fore.CYAN + "\n" + "=" * 45)
+    print(Fore.YELLOW + "       🔒 MENÚ DE ADMINISTRADOR 🔒")
+    print(Fore.CYAN + "=" * 45 + Style.RESET_ALL)
+    print("1. Ver logs del sistema")
+    print("2. Cambiar contraseña de administrador")
+    print("0. Volver al menú principal")
+    print("=" * 45)
+
+    opcion = input("Seleccione una opción: ").strip()
+
+    limpiar_consola()
+
+    if opcion == "1":
+        ver_logs()
+    elif opcion == "2":
+        cambiar_contrasenia()
+    elif opcion == "0":
+        print(Fore.GREEN + "Volviendo al menú principal...")
+        return
+    else:
+        print(Fore.RED + "❌ Opción inválida.")
+
+
     
 # --- Programa Principal ---
 
@@ -1350,6 +1501,7 @@ def menu_prestamos():
 ruta_libros = "libros.txt"
 ruta_usuarios = "usuarios.txt"
 ruta_prestamos = "prestamos.txt"
+ruta_pass = "admin_pass.txt"
 
 # --- Cargar datos al iniciar ---
 print(Fore.YELLOW + "📚 Cargando datos del sistema de biblioteca...\n")
@@ -1364,6 +1516,24 @@ registrar_log("INICIO", "Sistema iniciado correctamente.")
 time.sleep(1)
 limpiar_consola()
 
+# --- Contraseña del administrador ---
+
+if os.path.exists(ruta_pass):
+    try:
+        with abrir_archivo_seguro(ruta_pass, "r") as archivo:
+            contrasenia = archivo.read().strip()
+    except Exception as e:
+        print(Fore.RED + f"⚠ Error al leer {ruta_pass}: {e}")
+        contrasenia = "admin1234"
+else:
+    contrasenia = "admin1234"
+    try:
+        with abrir_archivo_seguro(ruta_pass, "w") as archivo:
+            archivo.write(contrasenia)
+    except Exception as e:
+        print(Fore.RED + f"⚠ Error al crear {ruta_pass}: {e}")
+
+
 # --- Diccionario de usuarios (estructura auxiliar para consultas rápidas) ---
 usuarios_dict = {}
 
@@ -1375,31 +1545,6 @@ for i in range(len(usuarios[0])):
         "direccion": usuarios[4][i],
         "bloqueado": usuarios[5][i]
     }
-
-# Si los archivos están vacíos, inicializa listas mínimas
-if libros == []:
-    libros = [
-        [1, "El Quijote", "Cervantes", True, 20],
-        [2, "Cien Años de Soledad", "G. García Márquez", True, 2],
-        [3, "La Odisea", "Homero", False, 0]
-    ]
-
-if usuarios == [[] for _ in range(6)]:
-    usuarios = [       
-        ['juan', 'maria', 'pedro'],
-        [46962189, 12345678, 98765432],
-        [1126030810, 1189077253, 1178540819],
-        ['juanagarcia@hotmail.com', 'mariacrisler@gmail.com', 'pedrotrota@gmail.com'],
-        ['Calle Falsa 123', 'Avenida Siempre Viva 742', 'Boulevard de los Sueños Rotos 456'],
-        [True, False, False]
-    ]
-
-if prestamos == []:
-    prestamos = [
-        ["juan", "El Quijote", "01/07/2025", "27/07/2025"]
-    ]
-
-contrasenia = "admin1234"
 
 # --- Bucle principal ---
 

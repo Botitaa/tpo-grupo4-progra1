@@ -49,3 +49,8 @@
 [2025-11-11 20:46:47] [INICIO] Sistema iniciado correctamente.
 [2025-11-11 20:47:55] [INICIO] Sistema iniciado correctamente.
 [2025-11-11 20:48:07] [SALIDA] Cierre del sistema y guardado automático.
+[2025-11-11 22:09:50] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 22:11:00] [INICIO] Sistema iniciado correctamente.
+[2025-11-11 22:11:23] [SALIDA] Cierre del sistema y guardado automático.
+[2025-11-12 00:09:05] [INICIO] Sistema iniciado correctamente.
+[2025-11-12 00:09:24] [ELIMINACION] Libro 'El Quijote' eliminado y IDs reordenados.
