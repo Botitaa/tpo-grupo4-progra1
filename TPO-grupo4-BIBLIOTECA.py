@@ -380,7 +380,7 @@ def reporte_stock_bajo(libros):
     "Muestra un reporte de libros cuyo stock es menor a un umbral ingresado por el usuario."
     print("\n--- Reporte de stock bajo ---")
     try:    
-        minimo_stock = input(int("Ingrese el mínimo de stock: "))
+        minimo_stock = int(input("Ingrese el mínimo de stock: "))
     except ValueError:
         print(Fore.YELLOW + "⚠ Ingrese un número entero válido.")
         return

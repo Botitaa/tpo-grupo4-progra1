@@ -61,3 +61,8 @@
 [2025-11-12 00:12:10] [INICIO] Sistema iniciado correctamente.
 [2025-11-12 00:14:44] [BACKUP] Backup automático completado correctamente.
 [2025-11-12 00:14:44] [SALIDA] Cierre del sistema y guardado automático.
+[2025-11-14 13:46:36] [INICIO] Sistema iniciado correctamente.
+[2025-11-14 13:47:30] [INICIO] Sistema iniciado correctamente.
+[2025-11-14 13:48:23] [INICIO] Sistema iniciado correctamente.
+[2025-11-14 13:50:45] [INICIO] Sistema iniciado correctamente.
+[2025-11-14 13:53:41] [USUARIO] juan (DNI 7686542) registrado con éxito.'
