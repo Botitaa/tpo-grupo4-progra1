@@ -1,50 +1,50 @@
-Carla Romero,La Metamorfosis,16
-Agustín López,Harry Potter y la Piedra Filosofal,40
-Carla Romero,Madame Bovary,30
-Juan Pérez,El Hobbit,26
-Pedro Gómez,Moby Dick,40
-Carla Romero,Harry Potter y la Piedra Filosofal,18
-Agustín López,El Principito,43
-Juan Pérez,Crónica de una Muerte Anunciada,16
-María López,El Señor de los Anillos,36
-Federico Pérez,El Coronel no tiene quien le escriba,18
-Laura Torres,Ensayo sobre la Ceguera,39
-Carla Romero,Fahrenheit 451,31
-Sofía Sánchez,Crónica de una Muerte Anunciada,32
-Sofía Sánchez,La Casa de los Espíritus,23
-Pedro Gómez,Harry Potter y la Piedra Filosofal,40
-Martín Gutiérrez,Rayuela,14
-Juan Pérez,El Túnel,38
-Pedro Gómez,Cumbres Borrascosas,42
-Laura Torres,El Retrato de Dorian Gray,32
-Pedro Gómez,Pedro Páramo,34
-María López,Crónica de una Muerte Anunciada,30
-Laura Torres,Bajo la Misma Estrella,22
-Federico Pérez,El Viejo y el Mar,18
-Agustín López,La Metamorfosis,27
-Juan Pérez,Pedro Páramo,39
-Federico Pérez,Antígona,15
-Juan Pérez,Harry Potter y la Piedra Filosofal,33
-Martín Gutiérrez,El Viejo y el Mar,20
-María López,Crónica de una Muerte Anunciada,31
-Sofía Sánchez,El Principito,15
-Laura Torres,Orgullo y Prejuicio,34
-María López,Las Aventuras de Tom Sawyer,35
-Lucía Fernández,Fahrenheit 451,33
-María López,Cumbres Borrascosas,22
-Sofía Sánchez,Frankenstein,23
-Juan Pérez,El Principito,36
-Laura Torres,El Amor en los Tiempos del Cólera,40
-Sofía Sánchez,El Coronel no tiene quien le escriba,15
-Agustín López,Martín Fierro,31
-Martín Gutiérrez,El Retrato de Dorian Gray,42
-Carla Romero,Crónica de una Muerte Anunciada,21
-Federico Pérez,Las Aventuras de Tom Sawyer,19
-Laura Torres,El Coronel no tiene quien le escriba,20
-Pedro Gómez,Moby Dick,24
-Lucía Fernández,Frankenstein,35
-Carla Romero,El Coronel no tiene quien le escriba,14
-Juan Pérez,Siddhartha,39
-Juan Pérez,El Nombre de la Rosa,34
-Agustín López,Martín Fierro,17
-agustin botana,El Amor en los Tiempos del Cólera,7
+Usuario1,Libro47,267
+Usuario2,Libro16,249
+Usuario3,Libro11,245
+Usuario4,Libro4,240
+Usuario5,Libro33,242
+Usuario6,Libro19,240
+Usuario7,Libro48,259
+Usuario8,Libro16,250
+Usuario9,Libro34,263
+Usuario10,Libro37,245
+Usuario11,Libro50,241
+Usuario12,Libro23,267
+Usuario13,Libro31,242
+Usuario14,Libro48,261
+Usuario15,Libro9,255
+Usuario16,Libro12,250
+Usuario17,Libro17,255
+Usuario18,Libro17,254
+Usuario19,Libro3,257
+Usuario20,Libro21,242
+Usuario21,Libro16,246
+Usuario22,Libro39,240
+Usuario23,Libro19,247
+Usuario24,Libro7,254
+Usuario25,Libro14,255
+Usuario26,Libro41,259
+Usuario27,Libro5,246
+Usuario28,Libro14,250
+Usuario29,Libro30,245
+Usuario30,Libro38,256
+Usuario31,Libro46,259
+Usuario32,Libro36,247
+Usuario33,Libro35,267
+Usuario34,Libro24,259
+Usuario35,Libro42,245
+Usuario36,Libro34,263
+Usuario37,Libro6,251
+Usuario38,Libro16,257
+Usuario39,Libro8,255
+Usuario40,Libro13,254
+Usuario41,Libro45,255
+Usuario42,Libro35,263
+Usuario43,Libro24,248
+Usuario44,Libro18,245
+Usuario45,Libro23,262
+Usuario46,Libro35,240
+Usuario47,Libro29,244
+Usuario48,Libro49,259
+Usuario49,Libro4,263
+Usuario50,Libro26,265

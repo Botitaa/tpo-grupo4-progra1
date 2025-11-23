@@ -1,52 +1,50 @@
-Carla Romero,La Metamorfosis,26/09/2025,27/10/2025
-Agustín López,Harry Potter y la Piedra Filosofal,31/08/2025,03/10/2025
-Carla Romero,Madame Bovary,26/07/2025,13/10/2025
-Juan Pérez,El Hobbit,12/07/2025,17/10/2025
-Pedro Gómez,Moby Dick,31/07/2025,03/10/2025
-Carla Romero,Harry Potter y la Piedra Filosofal,14/08/2025,25/10/2025
-Agustín López,El Principito,20/07/2025,30/09/2025
-Juan Pérez,Crónica de una Muerte Anunciada,07/07/2025,27/10/2025
-María López,El Señor de los Anillos,21/08/2025,07/10/2025
-Federico Pérez,El Coronel no tiene quien le escriba,12/07/2025,25/10/2025
-Laura Torres,Ensayo sobre la Ceguera,25/09/2025,04/10/2025
-Carla Romero,Fahrenheit 451,29/09/2025,12/10/2025
-Sofía Sánchez,Crónica de una Muerte Anunciada,12/08/2025,11/10/2025
-Sofía Sánchez,La Casa de los Espíritus,10/07/2025,20/10/2025
-Pedro Gómez,Harry Potter y la Piedra Filosofal,31/07/2025,03/10/2025
-Martín Gutiérrez,Rayuela,17/08/2025,29/10/2025
-Juan Pérez,El Túnel,09/09/2025,05/10/2025
-Pedro Gómez,Cumbres Borrascosas,14/07/2025,01/10/2025
-Laura Torres,El Retrato de Dorian Gray,17/08/2025,11/10/2025
-Pedro Gómez,Pedro Páramo,05/08/2025,09/10/2025
-María López,Crónica de una Muerte Anunciada,16/09/2025,13/10/2025
-Laura Torres,Bajo la Misma Estrella,02/08/2025,21/10/2025
-Federico Pérez,El Viejo y el Mar,24/08/2025,25/10/2025
-Agustín López,La Metamorfosis,31/07/2025,16/10/2025
-Juan Pérez,Pedro Páramo,31/07/2025,04/10/2025
-Federico Pérez,Antígona,15/09/2025,28/10/2025
-Juan Pérez,Harry Potter y la Piedra Filosofal,29/07/2025,10/10/2025
-Martín Gutiérrez,El Viejo y el Mar,25/08/2025,23/10/2025
-María López,Crónica de una Muerte Anunciada,17/07/2025,12/10/2025
-Sofía Sánchez,El Principito,04/09/2025,28/10/2025
-Laura Torres,Orgullo y Prejuicio,09/08/2025,09/10/2025
-María López,Las Aventuras de Tom Sawyer,26/07/2025,08/10/2025
-Lucía Fernández,Fahrenheit 451,07/09/2025,10/10/2025
-María López,Cumbres Borrascosas,11/09/2025,21/10/2025
-Sofía Sánchez,Frankenstein,04/07/2025,20/10/2025
-Juan Pérez,El Principito,21/08/2025,07/10/2025
-Laura Torres,El Amor en los Tiempos del Cólera,05/08/2025,03/10/2025
-Sofía Sánchez,El Coronel no tiene quien le escriba,07/08/2025,28/10/2025
-Agustín López,Martín Fierro,18/09/2025,12/10/2025
-Martín Gutiérrez,El Retrato de Dorian Gray,27/09/2025,01/10/2025
-Carla Romero,Crónica de una Muerte Anunciada,08/08/2025,22/10/2025
-Federico Pérez,Las Aventuras de Tom Sawyer,22/09/2025,24/10/2025
-Laura Torres,El Coronel no tiene quien le escriba,21/09/2025,23/10/2025
-Pedro Gómez,Moby Dick,13/09/2025,19/10/2025
-Lucía Fernández,Frankenstein,30/08/2025,08/10/2025
-Carla Romero,El Coronel no tiene quien le escriba,25/08/2025,29/10/2025
-Juan Pérez,Siddhartha,17/07/2025,04/10/2025
-Juan Pérez,El Nombre de la Rosa,12/09/2025,09/10/2025
-Agustín López,Martín Fierro,20/07/2025,26/10/2025
-agustin botana,El Quijote,29/10/2025,13/11/2025
-agustin botana,El Amor en los Tiempos del Cólera,29/10/2025,05/11/2025
-Carla Gómez,La invención de Morel,09/11/2025,23/11/2025
+Usuario1,Libro47,22/02/2025,1/03/2025
+Usuario2,Libro16,27/02/2025,19/03/2025
+Usuario3,Libro11,27/02/2025,23/03/2025
+Usuario4,Libro4,24/02/2025,28/03/2025
+Usuario5,Libro33,3/02/2025,26/03/2025
+Usuario6,Libro19,6/02/2025,28/03/2025
+Usuario7,Libro48,25/02/2025,9/03/2025
+Usuario8,Libro16,13/02/2025,18/03/2025
+Usuario9,Libro34,2/02/2025,5/03/2025
+Usuario10,Libro37,23/02/2025,23/03/2025
+Usuario11,Libro50,1/02/2025,27/03/2025
+Usuario12,Libro23,12/02/2025,1/03/2025
+Usuario13,Libro31,14/02/2025,26/03/2025
+Usuario14,Libro48,15/02/2025,7/03/2025
+Usuario15,Libro9,20/02/2025,13/03/2025
+Usuario16,Libro12,19/02/2025,18/03/2025
+Usuario17,Libro17,11/02/2025,13/03/2025
+Usuario18,Libro17,4/02/2025,14/03/2025
+Usuario19,Libro3,26/02/2025,11/03/2025
+Usuario20,Libro21,23/02/2025,26/03/2025
+Usuario21,Libro16,18/02/2025,22/03/2025
+Usuario22,Libro39,17/02/2025,28/03/2025
+Usuario23,Libro19,7/02/2025,21/03/2025
+Usuario24,Libro7,11/02/2025,14/03/2025
+Usuario25,Libro14,8/02/2025,13/03/2025
+Usuario26,Libro41,27/02/2025,9/03/2025
+Usuario27,Libro5,3/02/2025,22/03/2025
+Usuario28,Libro14,22/02/2025,18/03/2025
+Usuario29,Libro30,9/02/2025,23/03/2025
+Usuario30,Libro38,2/02/2025,12/03/2025
+Usuario31,Libro46,19/02/2025,9/03/2025
+Usuario32,Libro36,4/02/2025,21/03/2025
+Usuario33,Libro35,7/02/2025,1/03/2025
+Usuario34,Libro24,9/02/2025,9/03/2025
+Usuario35,Libro42,10/02/2025,23/03/2025
+Usuario36,Libro34,28/02/2025,5/03/2025
+Usuario37,Libro6,9/02/2025,17/03/2025
+Usuario38,Libro16,18/02/2025,11/03/2025
+Usuario39,Libro8,19/02/2025,13/03/2025
+Usuario40,Libro13,22/02/2025,14/03/2025
+Usuario41,Libro45,24/02/2025,13/03/2025
+Usuario42,Libro35,25/02/2025,5/03/2025
+Usuario43,Libro24,17/02/2025,20/03/2025
+Usuario44,Libro18,28/02/2025,23/03/2025
+Usuario45,Libro23,23/02/2025,6/03/2025
+Usuario46,Libro35,26/02/2025,28/03/2025
+Usuario47,Libro29,23/02/2025,24/03/2025
+Usuario48,Libro49,9/02/2025,9/03/2025
+Usuario49,Libro4,1/02/2025,5/03/2025
+Usuario50,Libro26,22/02/2025,3/03/2025

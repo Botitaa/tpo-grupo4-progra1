@@ -71,22 +71,20 @@ def hacer_backup():
             registrar_log("BACKUP", "Carpeta 'backup' creada automáticamente.")
 
         # --- Copia de LIBROS ---
-        with abrir_archivo_seguro("libros.txt", "r") as origen:
-            lineas = origen.readlines()
-        with abrir_archivo_seguro("backup/libros_backup.txt", "w") as destino:
-            destino.writelines(lineas)
+        with abrir_archivo_seguro("libros.txt", "r") as origen, abrir_archivo_seguro("backup/libros_backup.txt", "w") as destino:
+            # Copiar línea a línea para evitar cargar todo en memoria
+            for linea in origen:
+                destino.write(linea)
 
         # --- Copia de USUARIOS ---
-        with abrir_archivo_seguro("usuarios.txt", "r") as origen:
-            lineas = origen.readlines()
-        with abrir_archivo_seguro("backup/usuarios_backup.txt", "w") as destino:
-            destino.writelines(lineas)
+        with abrir_archivo_seguro("usuarios.txt", "r") as origen, abrir_archivo_seguro("backup/usuarios_backup.txt", "w") as destino:
+            for linea in origen:
+                destino.write(linea)
 
         # --- Copia de PRÉSTAMOS ---
-        with abrir_archivo_seguro("prestamos.txt", "r") as origen:
-            lineas = origen.readlines()
-        with abrir_archivo_seguro("backup/prestamos_backup.txt", "w") as destino:
-            destino.writelines(lineas)
+        with abrir_archivo_seguro("prestamos.txt", "r") as origen, abrir_archivo_seguro("backup/prestamos_backup.txt", "w") as destino:
+            for linea in origen:
+                destino.write(linea)
 
         print(Fore.GREEN + "✅ Backup automático realizado correctamente (en carpeta 'backup').")
         registrar_log("BACKUP", "Backup automático completado correctamente.")
@@ -110,10 +108,16 @@ def ver_logs():
 
     print(Fore.CYAN + "\n📄 Últimos registros del sistema:\n" + Style.RESET_ALL)
     try:
+        # Leer el archivo línea por línea y mantener solo las últimas 30 entradas
+        ultimas_lineas = []
         with abrir_archivo_seguro(ruta, "r") as archivo:
-            lineas = archivo.readlines()[-30:]
-            for linea in lineas:
-                print(linea.strip())
+            for linea in archivo:
+                ultimas_lineas.append(linea.rstrip("\n"))
+                # Mantener como máximo las 30 líneas más recientes
+                if len(ultimas_lineas) > 30:
+                    ultimas_lineas.pop(0)
+        for linea in ultimas_lineas:
+            print(linea)
     except Exception as e:
         print(Fore.RED + f"⚠ Error al leer logs: {e}")
 
@@ -122,28 +126,35 @@ def ver_logs():
 
 
 def mostrar_libros(matriz_libros):
-    print("\n" + Fore.CYAN + "--- Lista de Libros ---\n" + Style.RESET_ALL)
+        """Muestra la lista de libros cargados.
 
-    # Encabezado
-    print(Fore.YELLOW + f"{'ID':<5}{'Título':<30}{'Autor':<25}{'Disponible':<15}{'Cantidad':<10}")
-    print(Fore.CYAN + "-" * 90 + Style.RESET_ALL)
+        La nueva estructura de libros no utiliza un campo de disponibilidad
+        explícito; se considera que un libro está disponible si su cantidad
+        (stock) es mayor que cero. Por tanto, el encabezado y las columnas
+        reflejan únicamente el ID, el título, el autor y la cantidad.
+        """
+        print("\n" + Fore.CYAN + "--- Lista de Libros ---\n" + Style.RESET_ALL)
 
-    for fila in matriz_libros:
-        id_libro = fila[0]
-        titulo = str(fila[1])[:28]
-        autor = str(fila[2])[:23]
-        cantidad = fila[4]
+        # Encabezado sin la columna de disponibilidad
+        print(Fore.YELLOW + f"{'ID':<5}{'Título':<30}{'Autor':<25}{'Stock':<10}")
+        print(Fore.CYAN + "-" * 75 + Style.RESET_ALL)
 
-        # Color para la disponibilidad
-        if fila[3]:
-            disponible = Fore.GREEN + "Sí" + Style.RESET_ALL
-        else:
-            disponible = Fore.RED + "No" + Style.RESET_ALL
+        for fila in matriz_libros:
+            # La cantidad (stock) se encuentra en el último campo de la lista
+            # [ID, título, autor, cantidad]
+            id_libro = fila[0]
+            titulo = str(fila[1])[:28]
+            autor = str(fila[2])[:23]
+            # El stock está en el índice 3 para la nueva estructura
+            if len(fila) >= 4:
+                stock = fila[3]
+            else:
+                stock = ''
 
-        # Imprimir cada campo con formato fijo
-        print(f"{id_libro:<5}{titulo:<30}{autor:<25}{disponible:<22}  {cantidad:<10}")
+            # Imprimir cada campo con formato fijo
+            print(f"{id_libro:<5}{titulo:<30}{autor:<25}{stock:<10}")
 
-    print(Fore.CYAN + "-" * 90 + Style.RESET_ALL)
+        print(Fore.CYAN + "-" * 75 + Style.RESET_ALL)
 
 def buscar_libro_parcial(libros):
     "Busca y muestra libros por parte del txto del titulo o del autor."
@@ -221,7 +232,6 @@ def editar_libro(libros):
         print("1 - Título")
         print("2 - Autor")
         print("3 - Cantidad")
-        print("4 - Disponibilidad")
         print("0 - Salir")
 
         while True:
@@ -261,16 +271,10 @@ def editar_libro(libros):
                 if not nuevo.isdigit():
                     print(Fore.YELLOW + "Debe ser un número.")
                     continue
-                libro_encontrado[4] = int(nuevo)
-                libro_encontrado[3] = True if libro_encontrado[4] > 0 else False
-                registrar_log("CAMBIO", f"Libro ID {id_libro} cantidad -> {nuevo}, disponible={libro_encontrado[3]}")
+                # Actualizar el stock en el índice 3 (nuevo esquema)
+                libro_encontrado[3] = int(nuevo)
+                registrar_log("CAMBIO", f"Libro ID {id_libro} cantidad -> {nuevo}")
                 print(Fore.GREEN + "Cantidad actualizada.")
-
-            elif opcion == "4":
-                nuevo = input("¿Disponible? (si/no): ").strip().lower()
-                libro_encontrado[3] = True if nuevo in ("si", "s") else False
-                registrar_log("CAMBIO", f"Libro ID {id_libro} disponibilidad -> {libro_encontrado[3]}")
-                print(Fore.GREEN + "Disponibilidad modificada.")
 
             else:
                 print(Fore.RED + "Opción inválida.")
@@ -323,14 +327,13 @@ def agregar_libro(libros):
         else:
             print(Fore.YELLOW + 'Ingrese un numero entero valido.')
     
-    if cantidad>0:
-        disponibilidad = True
-    else:
-        disponibilidad = False
-        
-    libros.append([nuevo_id,titulo,autor,disponibilidad,cantidad])
+    # No se almacena un campo de disponibilidad explícito; la disponibilidad se
+    # deduce a partir del stock (cantidad). Por ello solo añadimos cuatro campos.
+    libros.append([nuevo_id, titulo, autor, cantidad])
     registrar_log("AGREGADO", f"titulo: {titulo}, autor: '{autor}', cantidad en stock {cantidad}")
-    print(f'Libro "{titulo}" agregado con exito.')
+    print(f'Libro "{titulo}" agregado con éxito.')
+    # Guardar inmediatamente tras agregar
+    guardar_libros(ruta_libros, libros)
 
 def eliminar_libro(libros):
     print("\n--- Eliminar Libro ---\n")
@@ -392,10 +395,13 @@ def reporte_stock_bajo(libros):
     encontrados = False
 
     for libro in libros:
-        if libro[4] < minimo_stock:
+        # Con la nueva estructura, el stock se almacena en la posición 3.
+        # Si la cantidad es menor al umbral indicado, mostrar el libro.
+        if libro[3] < minimo_stock:
             encontrados = True
-            color_stock = Fore.RED if libro[4] == 0 else Fore.YELLOW
-            print(f"{libro[0]:<5}{libro[1]:<35}{libro[2]:<25}{color_stock}{libro[4]:<10}{Style.RESET_ALL}")
+            # Utilizar rojo para cantidad cero y amarillo para cantidades bajas.
+            color_stock = Fore.RED if libro[3] == 0 else Fore.YELLOW
+            print(f"{libro[0]:<5}{libro[1]:<35}{libro[2]:<25}{color_stock}{libro[3]:<10}{Style.RESET_ALL}")
 
     if not encontrados:
         print(Fore.GREEN + "✅ No hay libros con stock menor al mínimo ingresado." + Style.RESET_ALL)
@@ -407,7 +413,8 @@ def exportar_libros_sin_stock(libros):
     try:
         with abrir_archivo_seguro("libros_sin_stock.txt", "w") as archivo:
             for libro in libros:
-                if libro[4] == 0:
+                # El stock está en la posición 3; si es cero, exportar el libro.
+                if libro[3] == 0:
                     archivo.write(f"{libro[0]},{libro[1]},{libro[2]}\n")
         print(Fore.GREEN + "💾Libros sin stock exportados correctamente")
     except Exception as error:
@@ -703,7 +710,7 @@ def editar_usuario(usuarios):
             else:
                 usuarios[1][indice] = int(nuevo_dni)
                 print(Fore.GREEN + "DNI editado con éxito.")
-                registrar_log("USUARIO", f"DNI:{usuarios}cambió a: {nuevo_dni}")
+                registrar_log("USUARIO", f"DNI {dni_str} cambió a: {nuevo_dni}")
         elif opcion == 3:
             #editar telefono
             nuevo_telefono = input("Ingrese el nuevo teléfono (10 dígitos, debe iniciar con 11) o '0' para volver: ")
@@ -759,23 +766,36 @@ def editar_usuario(usuarios):
         else:
             print(Fore.YELLOW + "Elija una opcion correcta: ")
 
-def buscar_usuario_por_dni_dicc(diccionario):
-    "Consulta para buscar un unico usuario"
+def buscar_usuario_por_dni(usuarios):
+    """Busca y muestra un usuario según su DNI.
 
-    try:
-        dni = int(input("Ingrese el DNI a buscar: "))
-        if dni in diccionario:
-            datos = diccionario[dni]
-            print(f"\nUsuario encontrado:")
-            print(f"Nombre: {datos['nombre']}")
-            print(f"Teléfono: {datos['telefono']}")
-            print(f"Email: {datos['email']}")
-            print(f"Dirección: {datos['direccion']}")
-            print(f"Estado: {'Bloqueado' if datos['bloqueado'] else 'Activo'}\n")
-        else:
-            print(Fore.RED + "No se encontró un usuario con ese DNI.")
-    except ValueError:
+    Se recibe la estructura de usuarios (lista de listas) y se
+    solicita el DNI. Si se encuentra, se muestran los datos del
+    usuario sin necesidad de utilizar un diccionario auxiliar.
+    """
+    dni_input = input("Ingrese el DNI a buscar (0 para volver): ").strip()
+    if dni_input == '0':
+        print('Volviendo...')
+        return
+    if not dni_input.isdigit():
         print(Fore.YELLOW + "DNI inválido. Ingrese solo números.")
+        return
+    dni = int(dni_input)
+    if dni in usuarios[1]:
+        indice = usuarios[1].index(dni)
+        nombre = usuarios[0][indice]
+        telefono = usuarios[2][indice]
+        email = usuarios[3][indice]
+        direccion = usuarios[4][indice]
+        bloqueado = usuarios[5][indice]
+        print(f"\nUsuario encontrado:")
+        print(f"Nombre: {nombre}")
+        print(f"Teléfono: {telefono}")
+        print(f"Email: {email}")
+        print(f"Dirección: {direccion}")
+        print(f"Estado: {'Bloqueado' if bloqueado else 'Activo'}\n")
+    else:
+        print(Fore.RED + "No se encontró un usuario con ese DNI.")
 
 # ---- Gestión de préstamos ----
 
@@ -839,7 +859,8 @@ def prestar_libro(libros, usuarios, prestamos):
         registrar_log("ERROR", f"{usuario_prestar} superó el máximo de préstamos (3)")
         return
 
-    if libro_prestar[4] <= 0:
+    # Verificar que haya stock disponible (la cantidad se almacena en la posición 3).
+    if libro_prestar[3] <= 0:
         print(Fore.RED + "❌ No hay ejemplares disponibles para préstamo.")
         registrar_log("ERROR", f"Intento de préstamo sin stock: {libro_prestar[1]}")
         return
@@ -849,9 +870,8 @@ def prestar_libro(libros, usuarios, prestamos):
 
     prestamos.append([usuario_prestar, libro_prestar[1], fecha_ingreso, fecha_limite])
     indice_libro = [libro[1] for libro in libros].index(libro_prestar[1])
-    libros[indice_libro][4] -= 1
-
-    libros[indice_libro][3] = True if libros[indice_libro][4] > 0 else False
+    # Reducir el stock en la posición 3; ya no existe el campo de disponibilidad explícito.
+    libros[indice_libro][3] -= 1
 
     guardar_prestamos(ruta_prestamos, prestamos)
     guardar_libros(ruta_libros, libros)
@@ -878,7 +898,8 @@ def devolver_libro(libros, prestamos):
     for prestamo in prestamos:
         if prestamo[0] == usuario_devolver and prestamo[1] == libro_devolver:
             prestamos.remove(prestamo)
-            libros[[libro[1] for libro in libros].index(libro_devolver)][4] += 1
+            # Al devolver un libro, se incrementa el stock en la posición 3.
+            libros[[libro[1] for libro in libros].index(libro_devolver)][3] += 1
             print(Fore.GREEN + "✅Libro devuelto con éxito.")
             registrar_log("PRESTAMO", f"{usuario_devolver} devolvió '{libro_devolver}'")
             guardar_prestamos(ruta_prestamos, prestamos)
@@ -980,7 +1001,11 @@ def renovacion_prestamos(prestamos, usuarios, ruta_prestamos):
         registrar_log("CANCELADO", "Renovación cancelada por usuario")
         return
 
-    prestamos_filtrados = prestamos.copy()
+    # En lugar de hacer una copia completa de la lista de préstamos,
+    # utilizamos una referencia. Esto evita duplicar la estructura
+    # en memoria y es suficiente para las operaciones de listado y
+    # selección, ya que no se modifica la lista original.
+    prestamos_filtrados = prestamos
 
     if opcion_busqueda == "1":
         texto = input("Ingrese parte del nombre del usuario o del libro (0 para volver): ").strip().lower()
@@ -1065,63 +1090,53 @@ def renovacion_prestamos(prestamos, usuarios, ruta_prestamos):
     print(Fore.GREEN + f"✅ Préstamo renovado. Nueva fecha: {prestamos[idx_original][3]}")
    
 def usuarios_con_mas_prestamos(prestamos):
+    """Muestra los usuarios ordenados por la cantidad de préstamos que tienen.
+
+    En lugar de utilizar la clase Counter de collections, se realiza un
+    conteo simple con un diccionario para reducir la complejidad y
+    mantener el uso de memoria al mínimo. Luego se ordena manualmente
+    la lista de resultados para mostrar los usuarios con mayor número
+    de préstamos.
+    """
     print("\n--- Usuarios con más préstamos ---\n")
-
-    nombres = []
-    cantidades = []
-
-    # Contar préstamos por usuario
+    # Contar préstamos por usuario mediante un diccionario
+    contador = {}
     for fila in prestamos:
         usuario = fila[0]
-        if usuario in nombres:
-            posicion = nombres.index(usuario)
-            cantidades[posicion] += 1
+        if usuario in contador:
+            contador[usuario] += 1
         else:
-            nombres.append(usuario)
-            cantidades.append(1)
-
-    # Ordenar por cantidad (descendente)
-    for i in range(len(cantidades)):
-        for j in range(i + 1, len(cantidades)):
-            if cantidades[i] < cantidades[j]:
-                cantidades[i], cantidades[j] = cantidades[j], cantidades[i]
-                nombres[i], nombres[j] = nombres[j], nombres[i]
-
-    # Encabezado ordenado y prolijo
+            contador[usuario] = 1
+    # Ordenar los usuarios por cantidad de préstamos de forma descendente
+    ordenados = sorted(contador.items(), key=lambda x: x[1], reverse=True)
+    # Encabezado
     print(f"{'N°':<4}{'Usuario':<20}{'Cantidad':<10}")
     print("-" * 34)
-
-    # Mostrar hasta los 10 primeros
-    for i in range(min(10, len(nombres))):
-        print(f"{i+1:<4}{nombres[i]:<20}{cantidades[i]:<10}")
-
+    # Mostrar hasta los 10 primeros usuarios
+    for i, (usuario, cantidad) in enumerate(ordenados[:10], start=1):
+        print(f"{i:<4}{usuario:<20}{cantidad:<10}")
     print("-" * 34)
 
 
 def libros_mas_prestados(prestamos):
-    "Muestra los libros ordenados por la cantidad de veces que fueron prestados."
+    """Muestra los libros ordenados por la cantidad de veces que fueron prestados.
 
+    Realiza el conteo manualmente para evitar el uso de collections.Counter.
+    """
     print("\n--- Libros más prestados ---\n")
-    titulos = []
-    cantidades = []
-    # Contar préstamos por libro
+    # Contar préstamos por título de forma manual
+    contador = {}
     for fila in prestamos:
-        libro = fila[1]
-        if libro in titulos:
-            posicion = titulos.index(libro)
-            cantidades[posicion] += 1
+        titulo = fila[1]
+        if titulo in contador:
+            contador[titulo] += 1
         else:
-            titulos.append(libro)
-            cantidades.append(1)
-    # Ordenar por cantidad de préstamos (descendente)
-    for i in range(len(cantidades)):
-        for j in range(i + 1, len(cantidades)):
-            if cantidades[i] < cantidades[j]:
-                cantidades[i], cantidades[j] = cantidades[j], cantidades[i]
-                titulos[i], titulos[j] = titulos[j], titulos[i]
-    # Mostrar hasta los 10 primeros libros más prestados
-    for i in range(min(10, len(titulos))):
-        print(f"{titulos[i]} - Veces prestado: {cantidades[i]}")
+            contador[titulo] = 1
+    # Ordenar por cantidad de préstamos
+    ordenados = sorted(contador.items(), key=lambda x: x[1], reverse=True)
+    # Mostrar hasta los 10 primeros libros
+    for titulo, cantidad in ordenados[:10]:
+        print(f"{titulo} - Veces prestado: {cantidad}")
 
 
 def morosos(prestamos):
@@ -1183,37 +1198,62 @@ def exportar_morosos(prestamos):
 # --- LIBROS ---
 
 def cargar_libros(ruta):
-    "Carga los libros desde un archivo de texto."
-    libros = []
-    try:
-        with abrir_archivo_seguro(ruta, "r") as archivo:
-            for linea in archivo:
-                datos = linea.strip().split(",")
-                if len(datos) == 5:
-                    id_libro = int(datos[0])
-                    titulo = datos[1]
-                    autor = datos[2]
-                    disponible = datos[3].lower() == "true"
-                    cantidad = int(datos[4])
-                    libros.append([id_libro, titulo, autor, disponible, cantidad])
-        print(Fore.GREEN + "✅ Libros cargados correctamente.")
-    except FileNotFoundError:
-        print(Fore.YELLOW + "⚠ No se encontró el archivo de libros. Se creará uno nuevo.")
-    except Exception as error:
-        print(Fore.RED + "⚠ Error al cargar los libros:", error)
-    return libros
+        """Carga los libros desde un archivo de texto.
+
+        Cada línea del archivo debe contener al menos cuatro campos separados por comas:
+        ID, título, autor y cantidad. Si se encuentra una línea con cinco campos
+        (que podría incluir una columna de disponibilidad obsoleta), se ignorará
+        el cuarto campo (disponibilidad) y se tomará la cantidad del quinto.
+        Devuelve una lista de listas con la estructura [ID, título, autor, cantidad].
+        """
+        libros = []
+        try:
+            with abrir_archivo_seguro(ruta, "r") as archivo:
+                for linea in archivo:
+                    datos = linea.strip().split(",")
+                    # Si hay 5 datos, el cuarto corresponde a disponibilidad (obsoleto)
+                    # y el quinto es la cantidad. Si hay 4 datos, ya están en orden.
+                    if len(datos) >= 5:
+                        id_libro = int(datos[0])
+                        titulo = datos[1]
+                        autor = datos[2]
+                        cantidad = int(datos[4])
+                        libros.append([id_libro, titulo, autor, cantidad])
+                    elif len(datos) == 4:
+                        id_libro = int(datos[0])
+                        titulo = datos[1]
+                        autor = datos[2]
+                        cantidad = int(datos[3])
+                        libros.append([id_libro, titulo, autor, cantidad])
+            print(Fore.GREEN + "✅ Libros cargados correctamente.")
+        except FileNotFoundError:
+            # Si el archivo no existe, crear uno vacío inmediatamente
+            print(Fore.YELLOW + "⚠ No se encontró el archivo de libros. Se creará uno nuevo.")
+            guardar_libros(ruta, libros)
+        except Exception as error:
+            print(Fore.RED + "⚠ Error al cargar los libros:", error)
+        return libros
 
 
 def guardar_libros(ruta, libros):
-    "Guarda la matriz de libros en un archivo de texto."
-    try:
-        with abrir_archivo_seguro(ruta, "w") as archivo:
-            for libro in libros:
-                linea = ",".join(map(str, libro))
-                archivo.write(linea + "\n")
-        print(Fore.GREEN + "💾 Libros guardados correctamente.")
-    except Exception as error:
-        print(Fore.RED + "⚠ Error al guardar los libros:", error)
+        """Guarda la lista de libros en un archivo de texto.
+
+        Se guardan únicamente los cuatro campos de la estructura: ID, título,
+        autor y cantidad. Esto evita almacenar datos obsoletos como la
+        disponibilidad explícita.
+        """
+        try:
+            with abrir_archivo_seguro(ruta, "w") as archivo:
+                for libro in libros:
+                    if len(libro) >= 4:
+                        linea = f"{libro[0]},{libro[1]},{libro[2]},{libro[3]}"
+                    else:
+                        # En caso de datos incompletos, unir todos los elementos disponibles
+                        linea = ",".join(map(str, libro))
+                    archivo.write(linea + "\n")
+            print(Fore.GREEN + "💾 Libros guardados correctamente.")
+        except Exception as error:
+            print(Fore.RED + "⚠ Error al guardar los libros:", error)
 
 
 # --- USUARIOS ---
@@ -1252,16 +1292,11 @@ def guardar_usuarios(ruta, usuarios):
         print(Fore.RED + "⚠ Error al guardar los usuarios:", error)
 
 
-def actualizar_diccionario_usuarios():
-    usuarios_dict.clear()
-    for i in range(len(usuarios[0])):
-        usuarios_dict[usuarios[1][i]] = {
-            "nombre": usuarios[0][i],
-            "telefono": usuarios[2][i],
-            "email": usuarios[3][i],
-            "direccion": usuarios[4][i],
-            "bloqueado": usuarios[5][i]
-        }
+# La función actualizar_diccionario_usuarios y el diccionario asociado han sido
+# eliminados, ya que cada menú carga los datos desde los archivos y no se
+# mantiene un diccionario global en memoria. Si se desea buscar usuarios
+# rápidamente por DNI, se utiliza la función buscar_usuario_por_dni que
+# recorre la lista de usuarios en memoria temporal.
 
 
 # --- PRÉSTAMOS ---
@@ -1343,6 +1378,16 @@ def menu_principal():
 
 
 def menu_libros():
+    """Menú de gestión de libros.
+
+    Se carga la lista de libros desde archivo al entrar y se
+    guardan los cambios en el archivo tras cada operación de
+    modificación. Esto evita mantener los datos en memoria de
+    manera global y permite trabajar con volúmenes grandes de
+    datos utilizando estructuras temporales simples.
+    """
+    # Cargar libros desde el archivo al iniciar el menú
+    libros = cargar_libros(ruta_libros)
 
     print("\n--- Gestión de Libros ---")
     print("1. Mostrar libros")
@@ -1358,7 +1403,7 @@ def menu_libros():
     except Exception as error:
         print(Fore.RED + "⚠ Error inesperado al leer la opción:", error)
         return
-    
+
     limpiar_consola()
 
     try:
@@ -1368,14 +1413,16 @@ def menu_libros():
             buscar_libro_parcial(libros)
         elif opcion == '3':
             editar_libro(libros)
+            # editar_libro ya guarda los cambios internamente
         elif opcion == '4':
+            # Agregar libro (agregar_libro guarda automáticamente los cambios)
             agregar_libro(libros)
         elif opcion == '5':
-            eliminar_libro(libros)
+            eliminar_libro(libros)  # eliminar_libro guarda cambios
         elif opcion == '6':
             reporte_stock_bajo(libros)
         elif opcion == '0':
-            menu_principal()
+            return  # Volver al menú principal
         else:
             print(Fore.YELLOW + "⚠ Opción inválida, intente nuevamente.")
     except Exception as error:
@@ -1383,10 +1430,15 @@ def menu_libros():
 
 
 def menu_usuarios():
+    """Menú de gestión de usuarios.
 
-    #actulizamos porque si hay algun cambio dps no va a aparecer
-
-    actualizar_diccionario_usuarios()
+    Carga la lista de usuarios desde archivo al entrar y guarda
+    cualquier modificación inmediatamente. No utiliza variables
+    globales para mantener la estructura en memoria más tiempo del
+    necesario.
+    """
+    # Cargar usuarios desde el archivo al iniciar el menú
+    usuarios = cargar_usuarios(ruta_usuarios)
 
     print("\n--- Gestión de Usuarios ---")
     print("1. Registrar usuario")
@@ -1407,16 +1459,22 @@ def menu_usuarios():
     try:
         if opcion == '1':
             registrar_usuario(usuarios)
+            # Guardar cambios si se registró correctamente
+            guardar_usuarios(ruta_usuarios, usuarios)
         elif opcion == '2':
             mostrar_usuarios(usuarios)
         elif opcion == '3':
             editar_usuario(usuarios)
+            # Guardar después de editar
+            guardar_usuarios(ruta_usuarios, usuarios)
         elif opcion == '4':
             eliminar_usuario(usuarios)
+            # Guardar después de eliminar
+            guardar_usuarios(ruta_usuarios, usuarios)
         elif opcion == '5':
-            buscar_usuario_por_dni_dicc(usuarios_dict)
+            buscar_usuario_por_dni(usuarios)
         elif opcion == '0':
-            menu_principal()
+            return  # Volver al menú principal
         else:
             print(Fore.YELLOW + "⚠ Opción inválida. Intente nuevamente.")
     except Exception as error:
@@ -1424,6 +1482,13 @@ def menu_usuarios():
 
 
 def menu_prestamos():
+    """Menú de gestión de préstamos.
+
+    Para cada opción se cargan únicamente los datos necesarios
+    desde los archivos correspondientes y se guardan los cambios
+    inmediatamente después de modificarlos. Así se evita mantener
+    múltiples estructuras grandes en memoria de forma simultánea.
+    """
 
     print("\n--- Gestión de Préstamos ---")
     print("1. Listar préstamos")
@@ -1435,7 +1500,7 @@ def menu_prestamos():
     print("7. Libros más prestados")
     print("8. Morosos")
     print("0. Volver al menú principal")
-    
+
     try:
         opcion = input("Seleccione una opción: ").strip()
     except Exception as error:
@@ -1446,23 +1511,47 @@ def menu_prestamos():
 
     try:
         if opcion == '1':
+            # Solo necesitamos los préstamos para listarlos
+            prestamos = cargar_prestamos(ruta_prestamos)
             listar_prestamos(prestamos)
         elif opcion == '2':
+            # Cargar datos necesarios para prestar un libro
+            libros = cargar_libros(ruta_libros)
+            usuarios = cargar_usuarios(ruta_usuarios)
+            prestamos = cargar_prestamos(ruta_prestamos)
             prestar_libro(libros, usuarios, prestamos)
+            # Los cambios se guardan dentro de prestar_libro
         elif opcion == '3':
+            # Cargar datos necesarios para devolver un libro
+            libros = cargar_libros(ruta_libros)
+            prestamos = cargar_prestamos(ruta_prestamos)
             devolver_libro(libros, prestamos)
+            # devolver_libro guarda los cambios
         elif opcion == '4':
+            # Revisar préstamos vencidos
+            prestamos = cargar_prestamos(ruta_prestamos)
             prestamos_vencidos(prestamos)
         elif opcion == '5':
+            # Renovación: requiere préstamos y usuarios
+            prestamos = cargar_prestamos(ruta_prestamos)
+            usuarios = cargar_usuarios(ruta_usuarios)
             renovacion_prestamos(prestamos, usuarios, ruta_prestamos)
+            # Guardar usuarios si alguno fue bloqueado durante renovación
+            guardar_usuarios(ruta_usuarios, usuarios)
         elif opcion == '6':
+            # Usuarios con más préstamos
+            prestamos = cargar_prestamos(ruta_prestamos)
             usuarios_con_mas_prestamos(prestamos)
         elif opcion == '7':
+            # Libros más prestados
+            prestamos = cargar_prestamos(ruta_prestamos)
             libros_mas_prestados(prestamos)
         elif opcion == '8':
+            # Morosos
+            prestamos = cargar_prestamos(ruta_prestamos)
             morosos(prestamos)
         elif opcion == '0':
-            menu_principal()
+            return  # Volver al menú principal
         else:
             print(Fore.YELLOW + "⚠ Opción inválida, intente nuevamente.")
     except Exception as error:
@@ -1504,20 +1593,17 @@ ruta_prestamos = "prestamos.txt"
 ruta_pass = "admin_pass.txt"
 
 # --- Cargar datos al iniciar ---
-print(Fore.YELLOW + "📚 Cargando datos del sistema de biblioteca...\n")
-
-libros = cargar_libros(ruta_libros)
-usuarios = cargar_usuarios(ruta_usuarios)
-prestamos = cargar_prestamos(ruta_prestamos)
+# Al iniciar el programa solo cargamos la contraseña del administrador.
+# Los datos de libros, usuarios y préstamos se cargarán bajo demanda en los menús
+print(Fore.YELLOW + "📚 Preparando el sistema de biblioteca...\n")
 
 registrar_log("INICIO", "Sistema iniciado correctamente.")
 
-#para que espere antes de iniciar
+# Pausa breve antes de mostrar el menú principal
 time.sleep(1)
 limpiar_consola()
 
 # --- Contraseña del administrador ---
-
 if os.path.exists(ruta_pass):
     try:
         with abrir_archivo_seguro(ruta_pass, "r") as archivo:
@@ -1534,20 +1620,7 @@ else:
         print(Fore.RED + f"⚠ Error al crear {ruta_pass}: {e}")
 
 
-# --- Diccionario de usuarios (estructura auxiliar para consultas rápidas) ---
-usuarios_dict = {}
-
-for i in range(len(usuarios[0])):
-    usuarios_dict[usuarios[1][i]] = {
-        "nombre": usuarios[0][i],
-        "telefono": usuarios[2][i],
-        "email": usuarios[3][i],
-        "direccion": usuarios[4][i],
-        "bloqueado": usuarios[5][i]
-    }
-
 # --- Bucle principal ---
-
 try:
     while True:
         menu_principal()
@@ -1556,13 +1629,17 @@ except KeyboardInterrupt:
 except Exception as error:
     print(Fore.RED + "⚠ Ocurrió un error inesperado:", error)
 finally:
+    # En el cierre del programa realizamos el backup y exportamos sin cargar grandes listas en memoria.
     hacer_backup()
     registrar_log("SALIDA", "Cierre del sistema y guardado automático.")
-    # --- Guardar datos automáticamente al cerrar ---
     print(Fore.YELLOW + "\n💾 Guardando datos antes de salir...")
-    guardar_libros(ruta_libros, libros)
-    guardar_usuarios(ruta_usuarios, usuarios)
-    guardar_prestamos(ruta_prestamos, prestamos)
-    exportar_libros_sin_stock(libros)
-    exportar_morosos(prestamos)
+    # Cargar y exportar de forma aislada para no mantener grandes estructuras en memoria
+    libros_final = cargar_libros(ruta_libros)
+    usuarios_final = cargar_usuarios(ruta_usuarios)
+    prestamos_final = cargar_prestamos(ruta_prestamos)
+    guardar_libros(ruta_libros, libros_final)
+    guardar_usuarios(ruta_usuarios, usuarios_final)
+    guardar_prestamos(ruta_prestamos, prestamos_final)
+    exportar_libros_sin_stock(libros_final)
+    exportar_morosos(prestamos_final)
     print(Fore.GREEN + "✅ Datos guardados correctamente. ¡Hasta luego!")

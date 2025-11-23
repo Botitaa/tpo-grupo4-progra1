@@ -1,50 +1,50 @@
-1,Cien Años de Soledad,Gabriel García Márquez,True,17
-2,Rayuela,Julio Cortázar,True,17
-3,Ficciones,Jorge Luis Borges,True,17
-4,La Metamorfosis,Franz Kafka,True,3
-5,1984,George Orwell,True,18
-6,Crimen y Castigo,Fiódor Dostoyevski,True,11
-7,Los Miserables,Victor Hugo,True,14
-8,Orgullo y Prejuicio,Jane Austen,True,20
-9,El Principito,Antoine de Saint-Exupéry,True,5
-10,La Odisea,Homero,True,16
-11,La Iliada,Homero,True,6
-12,Divina Comedia,Dante Alighieri,True,13
-13,Don Quijote de la Mancha,Miguel de Cervantes,True,16
-14,Pedro Páramo,Juan Rulfo,True,16
-15,La Casa de los Espíritus,Isabel Allende,True,3
-16,Drácula,Bram Stoker,True,5
-17,Frankenstein,Mary Shelley,True,11
-18,Moby Dick,Herman Melville,True,14
-19,El Retrato de Dorian Gray,Oscar Wilde,True,11
-20,El Guardián entre el Centeno,J. D. Salinger,True,5
-21,A Sangre Fría,Truman Capote,True,3
-22,Ensayo sobre la Ceguera,José Saramago,True,20
-23,El Amor en los Tiempos del Cólera,Gabriel García Márquez,True,2
-24,Los Detectives Salvajes,Roberto Bolaño,True,9
-25,La Sombra del Viento,Carlos Ruiz Zafón,True,8
-26,El Nombre de la Rosa,Umberto Eco,True,1
-27,Cumbres Borrascosas,Emily Brontë,True,9
-28,Madame Bovary,Gustave Flaubert,True,7
-29,Los Pilares de la Tierra,Ken Follett,True,3
-30,It,Stephen King,True,20
-31,Carrie,Stephen King,True,6
-32,Cementerio de Animales,Stephen King,True,10
-33,Harry Potter y la Piedra Filosofal,J. K. Rowling,True,13
-34,El Hobbit,J. R. R. Tolkien,True,3
-35,El Señor de los Anillos,J. R. R. Tolkien,True,4
-36,Crónica de una Muerte Anunciada,Gabriel García Márquez,True,11
-37,Doña Bárbara,Rómulo Gallegos,True,20
-38,Martín Fierro,José Hernández,True,5
-39,Antígona,Sófocles,True,15
-40,El Coronel no tiene quien le escriba,Gabriel García Márquez,True,10
-41,Donde Habitan los Ángeles,Claudia Celis,True,18
-42,El Túnel,Ernesto Sabato,True,12
-43,Sobrevivir al Naufragio,Jean Rhys,True,19
-44,Las Aventuras de Tom Sawyer,Mark Twain,True,13
-45,El Viejo y el Mar,Ernest Hemingway,True,2
-46,Fahrenheit 451,Ray Bradbury,True,13
-47,El Alquimista,Paulo Coelho,True,14
-48,Siddhartha,Hermann Hesse,True,13
-49,La Insoportable Levedad del Ser,Milan Kundera,True,12
-50,La invención de Morel,Adolfo Bioy Casares,True,0
+1,Libro1,Autor1,16
+2,Libro2,Autor2,0
+3,Libro3,Autor3,4
+4,Libro4,Autor4,11
+5,Libro5,Autor5,1
+6,Libro6,Autor6,5
+7,Libro7,Autor7,12
+8,Libro8,Autor8,15
+9,Libro9,Autor9,6
+10,Libro10,Autor10,2
+11,Libro11,Autor11,14
+12,Libro12,Autor12,6
+13,Libro13,Autor13,5
+14,Libro14,Autor14,9
+15,Libro15,Autor15,14
+16,Libro16,Autor16,9
+17,Libro17,Autor17,4
+18,Libro18,Autor18,13
+19,Libro19,Autor19,3
+20,Libro20,Autor20,4
+21,Libro21,Autor21,17
+22,Libro22,Autor22,17
+23,Libro23,Autor23,3
+24,Libro24,Autor24,14
+25,Libro25,Autor25,20
+26,Libro26,Autor26,11
+27,Libro27,Autor27,19
+28,Libro28,Autor28,17
+29,Libro29,Autor29,3
+30,Libro30,Autor30,11
+31,Libro31,Autor31,6
+32,Libro32,Autor32,11
+33,Libro33,Autor33,9
+34,Libro34,Autor34,1
+35,Libro35,Autor35,20
+36,Libro36,Autor36,19
+37,Libro37,Autor37,13
+38,Libro38,Autor38,10
+39,Libro39,Autor39,16
+40,Libro40,Autor40,3
+41,Libro41,Autor41,13
+42,Libro42,Autor42,10
+43,Libro43,Autor43,12
+44,Libro44,Autor44,7
+45,Libro45,Autor45,0
+46,Libro46,Autor46,8
+47,Libro47,Autor47,16
+48,Libro48,Autor48,20
+49,Libro49,Autor49,20
+50,Libro50,Autor50,7
